@@ -68,9 +68,7 @@ public class Game extends Thread // 게임 구현
 		{
 			if(select==1)
 			{
-				// 다음 방 올라가기 > 랜덤 맵 생성, 그 안에 몬스터 리젠..
-				// 다음 방 맵 생성
-				MapStage1 map1 = new MapStage1();
+				MapStage1 map1 = new MapStage1(); // 임시 맵 생성 기능
 				int rand = (int)(Math.random()*10)+1;
 				switch(rand)
 				{
@@ -128,7 +126,7 @@ public class Game extends Thread // 게임 구현
 		
 	}
 	
-	private Units mob()
+	private Units mob() // 임시 몹 랜덤 생성 기능
 	{
 		int randSel = (int)(Math.random()*2);
 		Units mobs;
@@ -145,7 +143,7 @@ public class Game extends Thread // 게임 구현
 		return null;
 	}
 	
-	private void fight(PlayerVO p1, Units mob)
+	private void fight(PlayerVO p1, Units mob) // 전투 기능
 	{
 		System.out.println();
 		System.out.println("== 전투 개시 ==");
@@ -214,17 +212,17 @@ public class Game extends Thread // 게임 구현
 			mob.setHp(mobHp);
 			// 데미지 계산 공식 :: 데미지 == (공격자 공격력 + 무기공격력 + 기타 특별아이템 도핑) - (방어자 방어력 + 방어구 + 기타 특별 아이템 도핑)
 			
-			System.out.println();
-			mob.toString();
-			System.out.println();
-			try {
-				sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
 			if(mob.getHp() > 0)
 			{
+				System.out.println();
+				mob.toString();
+				System.out.println();
+				try {
+					sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				System.out.println("== "+mob.getName()+"의 차례 ==");
 				System.out.println();
 				// 랜덤하게 행동 결정
@@ -253,6 +251,11 @@ public class Game extends Thread // 게임 구현
 			}
 			else
 			{
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				int getMoney = mob.die();
 				p1.setMoney(p1.getMoney()+getMoney);
 				t= false;
@@ -262,11 +265,16 @@ public class Game extends Thread // 게임 구현
 		System.out.println();
 		System.out.println("== 전투 종료 ==");
 		try {
-			sleep(3000);
+			sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		showInfo(p1);
+		try {
+			sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void showInfo(PlayerVO p1)
