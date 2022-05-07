@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class InventoryVO 
 {
-	private String invenId; 
-	private String userId;
-	private String itemId;
+	private int invenId; 
+	private int userId;
+	private int itemId;
 }

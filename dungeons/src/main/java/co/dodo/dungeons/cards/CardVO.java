@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CardVO 
 {
-	private String cardId;
+	private int cardId;
 	private String cardName;
 	private int attack;
 	private int defense;
