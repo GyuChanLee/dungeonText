@@ -7,7 +7,9 @@ import java.util.Scanner;
 import co.dodo.dungeons.cards.CardAttack;
 import co.dodo.dungeons.cards.CardDefense;
 import co.dodo.dungeons.cards.CardVO;
+import co.dodo.dungeons.items.ItemVO;
 import co.dodo.dungeons.maps.MapStage1;
+import co.dodo.dungeons.units.Boss1;
 import co.dodo.dungeons.units.Oak;
 import co.dodo.dungeons.units.Units;
 import co.dodo.dungeons.vo.PlayerVO;
@@ -15,14 +17,16 @@ import co.dodo.dungeons.vo.PlayerVO;
 public class Game extends Thread // 게임 구현 
 {	
 	private Scanner scn = new Scanner(System.in);
-	private PlayerVO p1 = new PlayerVO(0,"탐험가",1234);
+	private PlayerVO p1 = new PlayerVO(0,"탐험가",1234,0,0,3,1000,40, 0,999);
 	private List<CardVO> allCards = generateCards();
+	private MapStage1 map = new MapStage1();
 	
 	private void game()
 	{
 		boolean t = true;
 		while(t)
 		{
+			// 던전탐험 첫시작.
 			System.out.println("===================================== STAGE 1 =====================================");
 			System.out.println();
 			
@@ -39,8 +43,44 @@ public class Game extends Thread // 게임 구현
 			}
 			else if(select == 1)
 			{
-				stairs();
-				climbUp();
+				for(int i=0; i<10; i++)
+				{
+					if(p1.getProgress()==4) // 진행상황 5층 > 특별 이벤트 방.
+					{
+						stairs();
+//						climbUpEvent();
+						climbUpBoss();
+					}
+					else if(p1.getProgress()==9) // 10층 > 보스방
+					{
+						stairs();
+						climbUpBoss();
+					}
+					else
+					{
+						stairs();
+						climbUp();
+					}
+					if(p1.getHp() <= 0)
+					{
+						p1.setProgress(0);
+						return;
+					}
+				}
+				if(p1.getProgress()==10)
+				{
+					sleeps(500);
+					System.out.println("== STAGE1 - 버려진 성 탐험 완료 ==");
+					System.out.println("== ");
+					System.out.println("== ");
+					System.out.println("== 축하합니다! 당신은 악명높은 던전을 돌파하였습니다!");
+					sleeps(500);
+					System.out.println();
+					System.out.println();
+					System.out.println(p1.toString());
+					System.out.println();
+					sleeps(500);
+				}
 			}
 			else
 			{
@@ -57,27 +97,27 @@ public class Game extends Thread // 게임 구현
 	
 	private void climbUp()
 	{
-		MapStage1 map1 = new MapStage1(); // 임시 맵 생성 기능
+		// 임시 맵 생성 기능
 		int rand = (int)(Math.random()*10)+1;
 		switch(rand)
 		{
 		case 1:
 		case 5:
 		case 6:
-			map1.stage1map1();
+			map.stage1map1();
 			break;
 		case 2:
 		case 7:
-			map1.stage1map2();
+			map.stage1map2();
 			break;
 		case 3:
 		case 8:
 		case 10:
-			map1.stage1map3();
+			map.stage1map3();
 			break;
 		case 4:
 		case 9:
-			map1.stage1map4();
+			map.stage1map4();
 			break;
 		}
 		sleeps(2000);
@@ -87,7 +127,8 @@ public class Game extends Thread // 게임 구현
 		System.out.println();
 		// 전투 실행.
 		fight(p1,mob);
-		// 전투 승리 후 다음 층으로 이동. (1,2,3 선택지 > 강화, 게임저장, 게임 진행)
+		// 다음 층 진행 > 층수 +
+		p1.setProgress(p1.getProgress()+1);
 				
 			
 	}
@@ -140,14 +181,17 @@ public class Game extends Thread // 게임 구현
 			System.out.println("== 이번 턴의 카드 ==");
 			for(CardVO card : selectCard5) // 카드 5개를 보여줌.
 			{
+				sleeps(500);
 				System.out.println(card.toString());
 			}
+			sleeps(500);
 			System.out.println();
 			
 			System.out.println("== 1 - 5번 카드 중에서 선택 > ");
 			int select = Integer.parseInt(scn.nextLine());
 			CardVO selectCard = selectCard5.get(select-1);
 			
+			sleeps(500);
 			System.out.println();
 			System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
 			System.out.println("== "+selectCard.getReadme());
@@ -156,17 +200,20 @@ public class Game extends Thread // 게임 구현
 			p1Att = p1.getAttack()+selectCard.getAttack();
 			p1Def = p1.getDefense()+selectCard.getDefense();
 			p1.setDefense(p1Def);
-			mobHp -= (p1Att-mobDef);
+			if(p1.getAttack()!=p1Att)
+			{
+				mobHp -= (p1Att-mobDef);
+			}
 			mob.setHp(mobHp);
 			// 데미지 계산 공식 :: 데미지 == (공격자 공격력 + 무기공격력 + 기타 특별아이템 도핑) - (방어자 방어력 + 방어구 + 기타 특별 아이템 도핑)
 			
 			if(mob.getHp() > 0)
 			{
-				sleeps(2000);
+				sleeps(1000);
 				System.out.println();
 				mob.toString();
 				System.out.println();
-				sleeps(2000);
+				sleeps(1000);
 				
 				System.out.println("== "+mob.getName()+"의 차례 ==");
 				System.out.println();
@@ -198,7 +245,6 @@ public class Game extends Thread // 게임 구현
 			{
 				System.out.println("== "+p1.getUserName()+"은/는 장렬하게 사망하였습니다...");
 				System.out.println("== Game Over == ");
-				p1.setProgress(0);
 				return;
 			}
 		}
@@ -271,6 +317,8 @@ public class Game extends Thread // 게임 구현
 					System.out.println();
 					System.out.println("== 강화할 카드");
 					int enforce = Integer.parseInt(scn.nextLine());
+					sleeps(500);
+					
 					if(allCards.get(enforce-1).getAttack()!=0) // 공격카드일 시, 강화
 					{
 						allCards.get(enforce-1).setAttack((allCards.get(enforce-1).getAttack()+15));
@@ -301,6 +349,141 @@ public class Game extends Thread // 게임 구현
 			{
 				System.out.println("== 올바르게 입력하세요...");
 			}
+			sleeps(500);
 		}
+	}
+	
+	private void climbUpBoss()
+	{
+		map.stage1map10();
+		sleeps(2000);
+		System.out.println();
+		// 몹 생성
+		Boss1 boss1 = new Boss1(1000, 20, 30, 100);
+		System.out.println();
+		fightBoss(p1,boss1);
+		p1.setProgress(p1.getProgress()+1);
+	}
+	
+	private void fightBoss(PlayerVO p1, Units boss) // 보스전 전투 기능
+	{
+		System.out.println();
+		System.out.println("== 보스전 전투 개시 ==");
+		System.out.println();
+		boolean t = true;
+		int mobHp = boss.getHp();
+		int mobDef = boss.getDefense();
+		int p1Hp = p1.getHp();
+		int p1Att = p1.getAttack();
+		int p1Def = p1.getDefense();
+		while(t)
+		{
+			sleeps(1000);
+			System.out.println();
+			boss.toString();
+			sleeps(1000);
+			System.out.println();
+			showInfo(p1);
+			
+			sleeps(1000);
+			
+			System.out.println("== 당신의 차례 ==");
+			
+			List<CardVO> selectCard5 = new ArrayList<CardVO>(); // 전체 소지카드 중에서 5개를 랜덤으로 추출해낸 리스트.
+			selectCard5 = allCards;
+			
+			System.out.println();
+			System.out.println("== 이번 턴의 카드 ==");
+			for(CardVO card : selectCard5) // 카드 5개를 보여줌.
+			{
+				sleeps(500);
+				System.out.println(card.toString());
+			}
+			sleeps(500);
+			System.out.println();
+			
+			System.out.println("== 1 - 5번 카드 중에서 선택 > ");
+			int select = Integer.parseInt(scn.nextLine());
+			CardVO selectCard = selectCard5.get(select-1);
+			
+			sleeps(500);
+			System.out.println();
+			System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
+			System.out.println("== "+selectCard.getReadme());
+			System.out.println();
+			sleeps(500);
+			
+			p1Att = p1.getAttack()+selectCard.getAttack();
+			p1Def = p1.getDefense()+selectCard.getDefense();
+			p1.setDefense(p1Def);
+			if(p1.getAttack()!=p1Att)
+			{
+				mobHp -= (p1Att-mobDef);
+			}
+			boss.setHp(mobHp);
+			// 데미지 계산 공식 :: 데미지 == (공격자 공격력 + 무기공격력 + 기타 특별아이템 도핑) - (방어자 방어력 + 방어구 + 기타 특별 아이템 도핑)
+			
+			if(boss.getHp() > 0)
+			{
+				sleeps(500);
+				System.out.println();
+				boss.toString();
+				System.out.println();
+				sleeps(1000);
+				
+				System.out.println("== "+boss.getName()+"의 차례 ==");
+				System.out.println();
+				// 랜덤하게 행동 결정
+				int rand1 = (int)(Math.random()*10);
+				if(rand1<=0 && rand1<=3)
+				{
+					int mobAtt = boss.mobAttack();
+					p1Hp -= (mobAtt-p1Def);
+					p1.setHp(p1Hp);
+					sleeps(1000);
+				}
+				else if(rand1<=4 && rand1<=6)
+				{
+					mobDef = boss.mobDefense();
+					boss.setDefense(mobDef);
+					sleeps(1000);
+				}
+				else if(rand1==7 || rand1==8)
+				{
+					int mobAtt = ((Boss1) boss).bossAttack();
+					p1Hp -= (mobAtt-p1Def);
+					p1.setHp(p1Hp);
+					sleeps(1000);
+				}
+				else if(rand1==9)
+				{
+					int mobAtt = ((Boss1) boss).bossUltimate();
+					p1Hp -= (mobAtt-p1Def);
+					p1.setHp(p1Hp);
+					sleeps(1000);
+				}
+			}
+			else
+			{
+				sleeps(1000);
+				int getMoney = boss.die();
+				p1.setMoney(p1.getMoney()+getMoney);
+				ItemVO dropItem = ((Boss1) boss).specialDrop(); // 랜덤 아이템 드랍.
+				t= false;
+			}
+			
+			if(p1Hp <= 0)
+			{
+				System.out.println("== "+p1.getUserName()+"은/는 장렬하게 사망하였습니다...");
+				System.out.println("== Game Over == ");
+				return;
+			}
+		}
+		System.out.println();
+		System.out.println();
+		System.out.println("== 전투 종료 ==");
+		sleeps(1000);
+		showInfo(p1);
+		sleeps(1000);
 	}
 }

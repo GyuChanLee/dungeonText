@@ -15,9 +15,10 @@ public class PlayerVO
 		this.pw = pw;
 	}
 	
-	public PlayerVO(int userId, int pw, int progress, int kills, int action, int attack, int defense, int money, int hp) 
+	public PlayerVO(int userId,String userName,int pw, int progress, int kills, int action, int attack, int defense, int money, int hp) 
 	{
 		this.userId = userId;
+		this.userName = userName;
 		this.pw = pw;
 		this.progress = progress;
 		this.kills = kills;
@@ -50,6 +51,7 @@ public class PlayerVO
 		System.out.println("무기   : ");
 		System.out.println("방어구 : ");
 		System.out.println("소지금 : "+money);
+		System.out.println("개발확인용 진행상황 체크 : "+progress);
 		System.out.println();
 		return null;
 	}
