@@ -6,5 +6,4 @@ public interface BossFunction
 {
 	public int bossAttack();
 	public int bossUltimate();
-	public ItemVO specialDrop();
 }

@@ -1,7 +1,5 @@
 package co.dodo.dungeons.units;
 
-import co.dodo.dungeons.items.ItemVO;
-
 public class Boss1 extends Units implements BossFunction
 {
 	
@@ -55,21 +53,5 @@ public class Boss1 extends Units implements BossFunction
 		System.out.println("== 성의 주인이 죽었습니다!");
 		System.out.println("== 보상 : "+money+"금을 얻었습니다! ");
 		return money;
-	}
-	
-	@Override
-	public ItemVO specialDrop()
-	{
-		int rand = (int)(Math.random()*10);
-		if(rand >= 0 && rand <= 2)
-		{
-			// 랜덤으로 아이템 생성
-			ItemVO dropItem = new ItemVO();
-			return dropItem;
-		}
-		else
-		{
-			return null;
-		}
 	}
 }
