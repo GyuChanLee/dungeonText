@@ -29,4 +29,9 @@ public class ItemList
 	{
 		return itemList;
 	}
+	
+	public ItemVO getItem(int a)
+	{
+		return itemList.get(a);
+	}
 }

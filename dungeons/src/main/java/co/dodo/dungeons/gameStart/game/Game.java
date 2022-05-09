@@ -2,7 +2,7 @@ package co.dodo.dungeons.gameStart.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import co.dodo.dungeons.cards.CardAttack;
 import co.dodo.dungeons.cards.CardDefense;
@@ -29,10 +29,18 @@ public class Game extends Thread // 게임 구현
 	private Stages stage = new Stages();
 	private ItemList items = new ItemList(); 
 	private List<ItemVO> inventory = new ArrayList<ItemVO>();
+	private ItemVO[] equipment = new ItemVO[2];
+
+
 	
 	private void game()
 	{
 		items.makeAllItem();
+		inventory.add(items.getItem(0));
+		inventory.add(items.getItem(1));
+		inventory.add(items.getItem(2));
+		inventory.add(items.getItem(3));
+		
 		boolean t = true;
 		while(t)
 		{
@@ -242,7 +250,11 @@ public class Game extends Thread // 게임 구현
 				System.out.println("== 현재 행동력 : "+ p1Action);
 				System.out.println("== ");
 				int select = Integer.parseInt(scn.nextLine());
-				CardVO selectCard = selectCard5.get(select-1);
+				CardVO selectCard = null;
+				if(select!=6)
+				{
+					selectCard = selectCard5.get(select-1);
+				}
 				if(select==6) // 전투용 아이템 사용.
 				{
 					while(true)
@@ -250,6 +262,7 @@ public class Game extends Thread // 게임 구현
 						showInvenFight();
 						System.out.println();
 						System.out.println("== 쓰고싶은 아이템의 이름을 적으세요 > ");
+						System.out.println("== 뒤로가기 : \"back\" 입력 > ");
 						String itemSelect = scn.nextLine();
 						boolean yes = false;
 						for(int i=0; i<inventory.size();i++)
@@ -270,6 +283,11 @@ public class Game extends Thread // 게임 구현
 								yes = true;
 							}
 						}
+						if(itemSelect.equals("back"))
+						{
+							break;
+						}
+						
 						if(yes==false)
 						{
 							System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
@@ -293,7 +311,10 @@ public class Game extends Thread // 게임 구현
 					p1Def = selectCard.getDefense();
 					allDef += p1Def;
 				}
-				p1Action -= selectCard.getActionConsumption();
+				if(selectCard!=null)
+				{
+					p1Action -= selectCard.getActionConsumption();
+				}
 			}
 			
 			p1.setDefense(allDef);
@@ -387,7 +408,8 @@ public class Game extends Thread // 게임 구현
 			System.out.println();
 			System.out.println("== 1. 다음층으로 올라가기");
 			System.out.println("== 2. 강화");
-			System.out.println("== 3. 게임 저장");
+			System.out.println("== 3. 인벤토리");
+			System.out.println("== 4. 게임 저장");
 			System.out.println();
 	
 			try 
@@ -432,6 +454,11 @@ public class Game extends Thread // 게임 구현
 					reinforce--;
 				}
 				else if(select == 3)
+				{
+					showInven();
+					editEquipment();
+				}
+				else if(select == 4)
 				{
 					// p1 객체 db에 저장 > 게임 저장
 				}
@@ -535,6 +562,7 @@ public class Game extends Thread // 게임 구현
 						showInvenFight();
 						System.out.println();
 						System.out.println("== 쓰고싶은 아이템의 이름을 적으세요 > ");
+						System.out.println("== 뒤로가기 : \"back\" 입력 > ");
 						String itemSelect = scn.nextLine();
 						boolean yes = false;
 						for(int i=0; i<inventory.size();i++)
@@ -555,6 +583,11 @@ public class Game extends Thread // 게임 구현
 								yes = true;
 							}
 						}
+						if(itemSelect.equals("back"))
+						{
+							break;
+						}
+						
 						if(yes==false)
 						{
 							System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
@@ -578,7 +611,10 @@ public class Game extends Thread // 게임 구현
 					p1Def = selectCard.getDefense();
 					allDef += p1Def;
 				}
-				p1Action -= selectCard.getActionConsumption();
+				if(selectCard!=null)
+				{
+					p1Action -= selectCard.getActionConsumption();
+				}
 			}
 			
 			p1.setDefense(allDef);
@@ -672,18 +708,121 @@ public class Game extends Thread // 게임 구현
 			System.out.println("== 상인 : 어서오세요.. 없는 것 빼고 다 있답니다...");
 			System.out.println();
 			sleeps(500);
-			// 여러가지 아이템 / 장비들 중 10가지를 랜덤하게 생성해서 판매하기. 11번은 나가기.
+			// 여러가지 아이템 / 장비들 중 10가지를 랜덤하게 생성해서 판매하기. 5번은 나가기.
 			boolean t = true;
+			boolean check1 = false;
+			boolean check2 = false;
+			boolean check3 = false;
+			boolean check4 = false;
 			while(t)
 			{
+				int randbuy = (int)(Math.random()*items.getItemList().size());
 				System.out.println("== 판매 중인 아이템 및 장비 목록");
-				System.out.println("== 선택 >");
+				ItemVO sell1 = items.getItem(randbuy);
+				ItemVO sell2 = items.getItem(randbuy);
+				ItemVO sell3 = items.getItem(randbuy);
+				ItemVO sell4 = items.getItem(randbuy);
+				System.out.println();
+				System.out.print("1번 상품 == ");
+				if(check1==true)
+				{
+					System.out.println(" 매 진 ");
+				}
+				else
+				{
+					sell1.toString();
+				}
+				System.out.println();
+				System.out.print("2번 상품 == ");
+				if(check2==true)
+				{
+					System.out.println(" 매 진 ");
+				}
+				else
+				{
+					sell2.toString();
+				}
+				System.out.println();
+				System.out.print("3번 상품 == ");
+				if(check3==true)
+				{
+					System.out.println(" 매 진 ");
+				}
+				else
+				{
+					sell3.toString();
+				}
+				System.out.println();
+				System.out.print("4번 상품 == ");
+				if(check4==true)
+				{
+					System.out.println(" 매 진 ");
+				}
+				else
+				{
+					sell4.toString();
+				}
+				System.out.println();
+				System.out.println("== 선택 > ");
 				int buy = Integer.parseInt(scn.nextLine());
+				System.out.println();
 				if(buy==1)
 				{
-					// 1번 상품 구매 > 산 상품은 다음 while문 돌 때 없도록 하기.
+					if(sell1.getPrice()>p1.getMoney())
+					{
+						System.out.println("== 상인 : 돈이 부족하군요...");
+						System.out.println();
+					}
+					else
+					{
+						p1.setMoney(p1.getMoney()-sell1.getPrice());
+						inventory.add(sell1);
+						check1 = true;
+					}
 				}
-				else if(buy==11)
+				else if(buy==2)
+				{
+					if(sell2.getPrice()>p1.getMoney())
+					{
+						System.out.println("== 상인 : 돈이 부족하군요...");
+						System.out.println();
+					}
+					else
+					{
+						p1.setMoney(p1.getMoney()-sell2.getPrice());
+						inventory.add(sell2);
+						check2 = true;
+					}
+				}
+				else if(buy==3)
+				{
+					if(sell3.getPrice()>p1.getMoney())
+					{
+						System.out.println("== 상인 : 돈이 부족하군요...");
+						System.out.println();
+					}
+					else
+					{
+						p1.setMoney(p1.getMoney()-sell3.getPrice());
+						inventory.add(sell3);
+						check3 = true;
+					}
+				}
+				else if(buy==4)
+				{
+					if(sell4.getPrice()>p1.getMoney())
+					{
+						System.out.println("== 상인 : 돈이 부족하군요...");
+						System.out.println();
+					}
+					else
+					{
+						p1.setMoney(p1.getMoney()-sell4.getPrice());
+						inventory.add(sell4);
+						check4 = true;
+					}
+				}
+				else if(buy==5)
 				{
 					System.out.println("== 상인 : 벌써 가시게요..? 다음에 봅시다...");
 					System.out.println("== ");
@@ -830,11 +969,17 @@ public class Game extends Thread // 게임 구현
 	{
 		System.out.println("== 당신의 인벤토리 목록 ");
 		System.out.println();
+		int i = 1;
 		for(ItemVO item : inventory)
 		{
+			System.out.print(i+"번째 ");
 			item.toString();
+			System.out.println();
+			i++;
 		}
+		System.out.println();
 	}
+	
 	private void showInvenFight()
 	{
 		System.out.println("== 당신의 인벤토리 목록 ");
@@ -846,6 +991,83 @@ public class Game extends Thread // 게임 구현
 				sleeps(500);
 				item.toString();
 			}
+		}
+	}
+	
+	private void showEquipment()
+	{
+		System.out.println("== 착용 장비");
+		System.out.println();
+		System.out.println("== ");
+		if(equipment[0]!=null)
+		{
+			equipment[0].toString();
+			System.out.println();
+		}
+		if(equipment[1]!=null)
+		{
+			equipment[1].toString();
+			System.out.println();
+		}
+		System.out.println();
+	}
+	
+	private void editEquipment()
+	{
+		System.out.println("== 착용 장비를 관리하려면 0 입력 > ");
+		System.out.println("== 거부 : 아무 숫자 > ");
+		int equip = Integer.parseInt(scn.nextLine());
+		if(equip==0)
+		{
+			showEquipment();
+			System.out.println();
+			System.out.println("== 변경할 착용장비를 입력 ( 1: 무기, 2 : 방어구, 3 : 취소 ) > ");
+			System.out.println();
+			int changeOld = Integer.parseInt(scn.nextLine());
+			if(changeOld==1)
+			{
+				showInven();
+				System.out.println("== 대신 착용할 무기를 입력 ( 취소 : 0번 ) > ");
+				int changeNew = Integer.parseInt(scn.nextLine());
+				ItemVO chageItem = inventory.get(changeNew-1);
+				if(chageItem.getAttack()==0)
+				{
+					System.out.println("== 무기류를 선택하십시오...");
+				}
+				else
+				{
+					if(equipment[0]!=null)
+					{
+						p1.setAttack(p1.getAttack()-equipment[0].getAttack());
+					}
+					equipment[0] = chageItem; // 무기칸 변경
+					p1.setAttack(p1.getAttack()+equipment[0].getAttack());
+				}
+			}
+			else if(changeOld==2)
+			{
+				showInven();
+				System.out.println("== 대신 착용할 방어구를 입력 ( 취소 : 0번 ) > ");
+				int changeNew = Integer.parseInt(scn.nextLine());
+				ItemVO chageItem = inventory.get(changeNew-1);
+				if(chageItem.getDefense()==0)
+				{
+					System.out.println("== 방어구류를 선택하십시오...");
+				}
+				else
+				{
+					if(equipment[1]!=null)
+					{
+						p1.setDefense(p1.getDefense()-equipment[1].getDefense());
+					}
+					equipment[1] = chageItem; // 방어구칸 변경
+					p1.setDefense(p1.getDefense()+equipment[1].getDefense());
+				}
+			}
+		}
+		else
+		{
+			System.out.println();
 		}
 	}
 }
