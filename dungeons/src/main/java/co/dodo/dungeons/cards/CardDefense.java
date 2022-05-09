@@ -2,7 +2,7 @@ package co.dodo.dungeons.cards;
 
 public class CardDefense extends CardVO
 {
-	public CardDefense(int cardId) 
+	public CardDefense() 
 	{
 		
 		String cardName = "방어";
@@ -10,7 +10,6 @@ public class CardDefense extends CardVO
 		int defense = 5;
 		int actionConsumption = 1;
 		String readme = "작은 방패를 듭니다 [ 행동력 -1 ] ";
-		setCardId(cardId);
 		setCardName(cardName);
 		setAttack(attack);
 		setDefense(defense);

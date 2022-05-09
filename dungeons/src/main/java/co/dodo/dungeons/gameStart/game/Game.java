@@ -2,10 +2,8 @@ package co.dodo.dungeons.gameStart.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.Scanner;
 
-import co.dodo.dungeons.cards.CardAttack;
-import co.dodo.dungeons.cards.CardDefense;
 import co.dodo.dungeons.cards.CardVO;
 import co.dodo.dungeons.items.ItemList;
 import co.dodo.dungeons.items.ItemVO;
@@ -13,6 +11,8 @@ import co.dodo.dungeons.maps.MapStage1;
 import co.dodo.dungeons.maps.MapStage2;
 import co.dodo.dungeons.maps.Maps;
 import co.dodo.dungeons.maps.Stages;
+import co.dodo.dungeons.service.SaveFiles;
+import co.dodo.dungeons.service.SaveFilesImpl;
 import co.dodo.dungeons.units.Boss;
 import co.dodo.dungeons.units.Boss1;
 import co.dodo.dungeons.units.Boss2;
@@ -22,24 +22,30 @@ import co.dodo.dungeons.vo.PlayerVO;
 
 public class Game extends Thread // 게임 구현 
 {	
+	private SaveFiles sf = new SaveFilesImpl();
 	private Scanner scn = new Scanner(System.in);
-	private PlayerVO p1 = new PlayerVO("탐험가",1234,0,0,3,30,30, 0,999);
-	private List<CardVO> allCards = generateCards();
 	private Maps map;
 	private Stages stage = new Stages();
 	private ItemList items = new ItemList(); 
 	private List<ItemVO> inventory = new ArrayList<ItemVO>();
 	private ItemVO[] equipment = new ItemVO[2];
-
+	private PlayerVO p1;
+	private List<CardVO> allCards;
+	private boolean no = true;
 
 	
 	private void game()
 	{
+		checkLogin();
 		items.makeAllItem();
 		inventory.add(items.getItem(0));
 		inventory.add(items.getItem(1));
 		inventory.add(items.getItem(2));
 		inventory.add(items.getItem(3));
+		if(no==false)
+		{
+			return;
+		}
 		
 		boolean t = true;
 		while(t)
@@ -375,18 +381,6 @@ public class Game extends Thread // 게임 구현
 		sleeps(1000);
 	}
 	
-	private List<CardVO> generateCards() // 처음 카드리스트 생성
-	{
-		List<CardVO> cardList = new ArrayList<CardVO>();
-		cardList.add(new CardAttack(0));
-		cardList.add(new CardAttack(1));
-		cardList.add(new CardAttack(2));
-		cardList.add(new CardDefense(3));
-		cardList.add(new CardDefense(4));
-		
-		return cardList;
-	}
-	
 	private void sleeps(int second)
 	{
 //		try 
@@ -710,12 +704,21 @@ public class Game extends Thread // 게임 구현
 			sleeps(500);
 			// 여러가지 아이템 / 장비들 중 10가지를 랜덤하게 생성해서 판매하기. 5번은 나가기.
 			boolean t = true;
-			boolean check1 = false;
+			boolean check1 = false; //false:안팔림, true:매진.
 			boolean check2 = false;
 			boolean check3 = false;
 			boolean check4 = false;
 			while(t)
 			{
+				if(check1==true && check2==true && check3==true && check4==true)
+				{
+					System.out.println();
+					System.out.println("== 상인 : 감사합니다... 당신의 탐험이 무탈하길 기원하지요...");
+					System.out.println();
+					p1.setProgress(p1.getProgress()+1);
+					return;
+				}
+				
 				int randbuy = (int)(Math.random()*items.getItemList().size());
 				System.out.println("== 판매 중인 아이템 및 장비 목록");
 				ItemVO sell1 = items.getItem(randbuy);
@@ -1068,6 +1071,48 @@ public class Game extends Thread // 게임 구현
 		else
 		{
 			System.out.println();
+		}
+	}
+	
+	private void checkLogin()
+	{
+		System.out.println("== 문지기 : 이문을 지나가려면 당신의 신원을 조회해야 합니다.");
+		System.out.println("== 문지기 : 당신의 이름을 대시오...");
+		String name = scn.nextLine();
+		List<PlayerVO> nameList = sf.playerAllSelect();
+		boolean t = false;
+		for(PlayerVO vo : nameList)
+		{
+			if(name.equals(vo.getUserName()))
+			{
+				System.out.println("문지기 : 신원목록에 있군! 좋습니다!");
+				System.out.println("문지기 : 그렇다면 비밀번호를 말해주십시오!");
+				System.out.println();
+				int pw = Integer.parseInt(scn.nextLine());
+				t = true;
+				PlayerVO vo1 = new PlayerVO(name,123);
+				p1 = sf.playerSelect(vo1);
+				if(pw==p1.getPw())
+				{
+					System.out.println("문지기 : 신원 확인했습니다! 가도 좋습니다!");
+					System.out.println();
+				}
+				else
+				{
+					System.out.println("문지기 : 음 틀린거 같군요... 못갑니다...");
+					System.out.println();
+					System.out.println("== Game Over ==");
+					no = false;
+				}
+//				allCards = sf.
+			}
+		}
+		if(t==false)
+		{
+			System.out.println("문지기 : 목록에 없는 이름이군! 갈 수 없다!");
+			System.out.println();
+			System.out.println("== Game Over ==");
+			no = false;
 		}
 	}
 }

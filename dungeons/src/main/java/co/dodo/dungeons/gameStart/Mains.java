@@ -1,12 +1,21 @@
 package co.dodo.dungeons.gameStart;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
+import co.dodo.dungeons.cards.CardAttack;
+import co.dodo.dungeons.cards.CardDefense;
+import co.dodo.dungeons.cards.CardVO;
 import co.dodo.dungeons.gameStart.game.Game;
+import co.dodo.dungeons.service.SaveFiles;
+import co.dodo.dungeons.service.SaveFilesImpl;
+import co.dodo.dungeons.vo.PlayerVO;
 
 public class Mains
 {
 	private Scanner scn = new Scanner(System.in);
+	private SaveFiles sf = new SaveFilesImpl();
 	
 	private void gameStrat() // 게임 메뉴
 	{
@@ -21,6 +30,8 @@ public class Mains
 				{
 					// 새로운 게임 > 1. 간단 유저 생성, 2. 새 게임 시작.
 					Game g = new Game();
+					
+					makeUser();
 					g.gameRun();
 					
 				}
@@ -71,5 +82,46 @@ public class Mains
 		System.out.println("==== 4. 세이브파일 삭제   ====");
 		System.out.println("==== 5. 게임 종료         ====");
 		System.out.println();
+	}
+	
+	private void makeUser() // 새 세이브파일 생성 + 새 캐릭터, 카드리스트, 인벤토리 구성.
+	{
+		System.out.println("== 모험가의 이름을 정하세요 > ");
+		String userName = scn.nextLine();
+		System.out.println("== 세이브파일의 간단한 비밀번호를 정하세요 > ");
+		int pw = Integer.parseInt(scn.nextLine());
+		System.out.println();
+		PlayerVO p1 = new PlayerVO(userName,pw);
+		sf.playerInsert(p1); 
+		List<CardVO> allCards = new ArrayList<CardVO>();
+		allCards = generateCards();
+		
+		for(int i=0; i<allCards.size(); i++)
+		{
+			sf.cardListInsert(allCards.get(i), p1);
+		}
+		
+	}
+	
+	private List<CardVO> generateCards() // 처음 카드리스트 생성
+	{
+		List<CardVO> cardList = new ArrayList<CardVO>();
+		CardVO general1 = new CardAttack(); 
+		CardVO general2 = new CardAttack(); 
+		CardVO general3 = new CardAttack(); 
+		CardVO general4 = new CardDefense(); 
+		CardVO general5 = new CardDefense(); 
+		cardList.add(general1);
+		sf.cardInsert(general1);
+		cardList.add(general2);
+		sf.cardInsert(general2);
+		cardList.add(general3);
+		sf.cardInsert(general3);
+		cardList.add(general4);
+		sf.cardInsert(general4);
+		cardList.add(general5);
+		sf.cardInsert(general5);
+		
+		return cardList;
 	}
 }
