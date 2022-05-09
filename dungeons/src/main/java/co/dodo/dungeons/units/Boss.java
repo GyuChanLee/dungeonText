@@ -3,7 +3,7 @@ package co.dodo.dungeons.units;
 import lombok.Data;
 
 @Data
-public abstract class Units 
+public abstract class Boss 
 {
 	private String name;
 	private int money;
@@ -11,7 +11,7 @@ public abstract class Units
 	private int defense;
 	private int hp;
 	
-	public Units(int money, int attack, int defense, int hp)
+	public Boss(int money, int attack, int defense, int hp)
 	{
 		this.money = money;
 		this.attack = attack;
@@ -21,12 +21,14 @@ public abstract class Units
 	
 	public abstract int mobAttack();
 	public abstract int mobDefense();
-	public abstract int die(); // 몹이 죽었을 때 실시.
+	public abstract int die();
+	public abstract int bossAttack();
+	public abstract int bossUltimate();
 	
 	@Override
 	public String toString()
 	{
-		System.out.println("== 몹 정보 ==");
+		System.out.println("== 보스 정보 ==");
 		System.out.print("이름 : "+name+"  ");
 		System.out.print("생명력 : "+hp+"  ");
 		System.out.print("공격력 : "+attack+"  ");

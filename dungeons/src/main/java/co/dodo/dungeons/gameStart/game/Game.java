@@ -42,11 +42,17 @@ public class Game extends Thread // 게임 구현
 			
 			sleeps(500);
 			System.out.println("== 1. 들어가기.");
-			System.out.println("== 2. 도망치기.");
+			System.out.println("== 2. 나가기.");
+			System.out.println("== 3. 게임저장.");
 			int select = Integer.parseInt(scn.nextLine());
-			if(select == 2)
+			
+			if(select == 3)
 			{
-				System.out.println("== 도망치는게 아닙니다, 역돌격입니다...");
+				System.out.println("== 게임 저장 완료! ");
+			}
+			else if(select == 2)
+			{
+				System.out.println("== 집으로 돌아갑니다...");
 				t =false;
 			}
 			else if(select == 1)
@@ -301,6 +307,7 @@ public class Game extends Thread // 게임 구현
 	
 	private void stairs()
 	{
+		int reinforce = 1;
 		while(true)
 		{
 			System.out.println("== 현재 층은 "+(p1.getProgress()+1)+"층 입니다...");
@@ -317,7 +324,7 @@ public class Game extends Thread // 게임 구현
 				{
 					break;
 				}
-				else if(select == 2)
+				else if(select == 2 && reinforce == 1)
 				{
 					System.out.println("====  강  화  ====");
 					System.out.println();
@@ -349,6 +356,7 @@ public class Game extends Thread // 게임 구현
 						System.out.println("강화 후 카드의 방어력 : "+allCards.get(enforce-1).getDefense());
 						System.out.println();
 					}
+					reinforce--;
 				}
 				else if(select == 3)
 				{
@@ -357,6 +365,13 @@ public class Game extends Thread // 게임 구현
 				else
 				{
 					System.out.println("== 올바르게 입력하세요...");
+				}
+				
+				if(reinforce!=1)
+				{
+					System.out.println();
+					System.out.println("== 이미 강화를 한번 하셨습니다...");
+					System.out.println();
 				}
 			} 
 			catch (NumberFormatException e) 
@@ -373,24 +388,23 @@ public class Game extends Thread // 게임 구현
 		sleeps(2000);
 		System.out.println();
 		// 몹 생성
-		Boss1 boss1 = null;
-		Boss2 boss2 = null;
 		if(p1.getProgress()==9)
 		{
-			boss1 = new Boss1(1000, 40, 30, 150);
+			Boss boss = new Boss1(1000, 40, 30, 150);
 			System.out.println();
-			fightBoss(p1,boss1);
+			fightBoss(p1,boss);
 		}
 		else if(p1.getProgress()==19)
 		{
-			boss2 = new Boss2(2000, 50, 50, 200);
+			Boss boss = new Boss2(2000, 50, 50, 200);
 			System.out.println();
-			fightBoss(p1,boss2);
+			fightBoss(p1,boss);
 		}
+		
 		p1.setProgress(p1.getProgress()+1);
 	}
 	
-	private void fightBoss(PlayerVO p1, Units boss) // 보스전 전투 기능
+	private void fightBoss(PlayerVO p1, Boss boss) // 보스전 전투 기능
 	{
 		System.out.println();
 		System.out.println("== 보스전 전투 개시 ==");
@@ -476,28 +490,14 @@ public class Game extends Thread // 게임 구현
 				}
 				else if(rand1==6 || rand1==7)
 				{
-					if(boss.getName().equals("성의 주인"))
-					{
-						mobAtt = ((Boss1) boss).bossAttack();
-					}
-					else if(boss.getName().equals("감옥탑의 괴물"))
-					{
-						mobAtt = ((Boss2) boss).bossAttack();
-					}
+					mobAtt = boss.bossAttack();
 					p1Hp -= (mobAtt-p1Def);
 					p1.setHp(p1Hp);
 					sleeps(1000);
 				}
 				else if(rand1==8 || rand1==9)
 				{
-					if(boss.getName().equals("성의 주인"))
-					{
-						mobAtt = ((Boss1) boss).bossUltimate();
-					}
-					else if(boss.getName().equals("감옥탑의 괴물"))
-					{
-						mobAtt = ((Boss2) boss).bossUltimate();
-					}
+					mobAtt = boss.bossUltimate();
 					p1Hp -= (mobAtt-p1Def);
 					p1.setHp(p1Hp);
 					sleeps(1000);
