@@ -268,7 +268,7 @@ public class SaveFilesImpl implements SaveFiles
 	public int cardListInsert(CardVO vo1,PlayerVO vo2)
 	{
 		int n = 0;
-		String sql = "INSERT INTO INVENTORY VALUES(CARDLIST_SEQ.NEXTVAL,?,?)";
+		String sql = "INSERT INTO CARDLIST VALUES(CARDLIST_SEQ.NEXTVAL,?,?)";
 		try
 		{
 			CardListVO vo = new CardListVO();
@@ -322,8 +322,39 @@ public class SaveFilesImpl implements SaveFiles
 	@Override
 	public CardListVO CardListSelect(PlayerVO vo)
 	{
-		String sql = "SELECT * FROM CARDLIST WHERE USERID = ?";
+		String sql = "SELECT * FROM CARDLIST WHERE USERNAME = ?";
 		CardListVO vo1 = null;
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, vo.getUserName()); // 숫자는  ?의 위치, 그 위치에 필요한 인수 넣기.
+			rs = psmt.executeQuery();
+			
+			if(rs.next())
+			{
+				vo1 = new CardListVO();
+				vo1.setCardsId(rs.getInt("cardsid"));
+				vo1.setUserId(rs.getInt("userid"));
+				vo1.setCardId(rs.getInt("cardid"));
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			close();
+		}
+		return vo1;
+	}
+	
+	@Override
+	public CardVO CardSelect(PlayerVO vo)
+	{
+		String sql = "SELECT * FROM CARD WHERE USERID = ?";
+		CardVO vo1 = null;
 		try
 		{
 			conn = dao.getConnection();
@@ -333,10 +364,12 @@ public class SaveFilesImpl implements SaveFiles
 			
 			if(rs.next())
 			{
-				vo1 = new CardListVO();
-				vo1.setCardsId(rs.getInt("cardsid"));
-				vo1.setUserId(rs.getInt("userid"));
+				vo1 = new CardVO();
 				vo1.setCardId(rs.getInt("cardid"));
+				vo1.setCardName(rs.getString("cardname"));
+				vo1.setAttack(rs.getInt("defense"));
+				vo1.setDefense(rs.getInt("actionconsumption"));
+				vo1.setReadme(rs.getString("readme"));
 			}
 		}
 		catch(SQLException e)

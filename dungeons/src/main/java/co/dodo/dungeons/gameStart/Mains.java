@@ -92,13 +92,17 @@ public class Mains
 		int pw = Integer.parseInt(scn.nextLine());
 		System.out.println();
 		PlayerVO p1 = new PlayerVO(userName,pw);
-		sf.playerInsert(p1); 
+		sf.playerInsert(p1);
+		p1 = sf.playerSelect(p1);
 		List<CardVO> allCards = new ArrayList<CardVO>();
+		List<CardVO> allCards1 = new ArrayList<CardVO>();
 		allCards = generateCards();
 		
 		for(int i=0; i<allCards.size(); i++)
 		{
-			sf.cardListInsert(allCards.get(i), p1);
+			sf.CardSelect(p1);
+			CardVO tmp = allCards.get(i);
+			sf.cardListInsert(, p1);
 		}
 		
 	}

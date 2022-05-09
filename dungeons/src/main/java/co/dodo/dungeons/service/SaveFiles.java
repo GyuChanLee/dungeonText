@@ -23,6 +23,6 @@ public interface SaveFiles
 	int cardListInsert(CardVO vo1,PlayerVO vo2); // 카드리스트에 넣기
 	InventoryVO InventorySelect(PlayerVO vo); // 인벤토리 불러오기 해당 플레이어
 	CardListVO CardListSelect(PlayerVO vo); // 카드리스트 불러오기 
-	
+	CardVO CardSelect(PlayerVO vo); // 카드 불러오기
 	// 얻은 아이템 인벤토리에 넣기 > 아이템 고유번호 저장, 그 번호 인벤db에 저장.
 }
