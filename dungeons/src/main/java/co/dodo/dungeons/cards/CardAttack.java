@@ -8,7 +8,7 @@ public class CardAttack extends CardVO
 		int attack = 30;
 		int defense = 0;
 		int actionConsumption = 1;
-		String readme = "기본적인 칼을 휘두릅니다  [ -행동력1 ] ";
+		String readme = "기본적인 칼을 휘두릅니다  [ 행동력 -1 ] ";
 		setCardId(cardId);
 		setCardName(cardName);
 		setAttack(attack);

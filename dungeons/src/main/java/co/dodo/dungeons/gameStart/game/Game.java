@@ -1,22 +1,38 @@
 package co.dodo.dungeons.gameStart.game;
 
-import java.util.*;
-import co.dodo.dungeons.cards.*;
-import co.dodo.dungeons.items.*;
-import co.dodo.dungeons.maps.*;
-import co.dodo.dungeons.units.*;
-import co.dodo.dungeons.vo.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import co.dodo.dungeons.cards.CardAttack;
+import co.dodo.dungeons.cards.CardDefense;
+import co.dodo.dungeons.cards.CardVO;
+import co.dodo.dungeons.items.ItemList;
+import co.dodo.dungeons.items.ItemVO;
+import co.dodo.dungeons.maps.MapStage1;
+import co.dodo.dungeons.maps.MapStage2;
+import co.dodo.dungeons.maps.Maps;
+import co.dodo.dungeons.maps.Stages;
+import co.dodo.dungeons.units.Boss;
+import co.dodo.dungeons.units.Boss1;
+import co.dodo.dungeons.units.Boss2;
+import co.dodo.dungeons.units.Oak;
+import co.dodo.dungeons.units.Units;
+import co.dodo.dungeons.vo.PlayerVO;
 
 public class Game extends Thread // 게임 구현 
 {	
 	private Scanner scn = new Scanner(System.in);
-	private PlayerVO p1 = new PlayerVO(0,"탐험가",1234,0,0,3,1000,40, 0,999);
+	private PlayerVO p1 = new PlayerVO("탐험가",1234,0,0,3,30,30, 0,999);
 	private List<CardVO> allCards = generateCards();
 	private Maps map;
 	private Stages stage = new Stages();
+	private ItemList items = new ItemList(); 
+	private List<ItemVO> inventory = new ArrayList<ItemVO>();
 	
 	private void game()
 	{
+		items.makeAllItem();
 		boolean t = true;
 		while(t)
 		{
@@ -184,8 +200,15 @@ public class Game extends Thread // 게임 구현
 		int mobHp = mob.getHp();
 		int mobDef = mob.getDefense();
 		int p1Hp = p1.getHp();
-		int p1Att = p1.getAttack();
-		int p1Def = p1.getDefense();
+		int p1Att = 0;
+		int p1Def = 0;
+		int allAtt = p1.getAttack();
+		int allDef = p1.getDefense();
+		int p1Action = p1.getAction();
+		// 힐 / 투척무기
+		int heal = 0;
+		int instanceDamage = 0;
+		
 		while(t)
 		{
 			sleeps(2000);
@@ -211,28 +234,76 @@ public class Game extends Thread // 게임 구현
 			}
 			sleeps(500);
 			System.out.println();
-			
-			System.out.println("== 1 - 5번 카드 중에서 선택 > ");
-			int select = Integer.parseInt(scn.nextLine());
-			CardVO selectCard = selectCard5.get(select-1);
-			
-			sleeps(500);
-			System.out.println();
-			System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
-			System.out.println("== "+selectCard.getReadme());
-			System.out.println();
-			
-			p1Att = p1.getAttack()+selectCard.getAttack();
-			p1Def = p1.getDefense()+selectCard.getDefense();
-			p1.setDefense(p1Def);
-			if(p1.getAttack()!=p1Att)
+			while(p1Action>0)
 			{
-				mobHp -= (p1Att-mobDef);
+				System.out.println("== 1 - 5번 카드 중에서 선택 > ");
+				System.out.println("== 아이템 사용 : 6번 > ");
+				System.out.println("== ");
+				System.out.println("== 현재 행동력 : "+ p1Action);
+				System.out.println("== ");
+				int select = Integer.parseInt(scn.nextLine());
+				CardVO selectCard = selectCard5.get(select-1);
+				if(select==6) // 전투용 아이템 사용.
+				{
+					while(true)
+					{
+						showInvenFight();
+						System.out.println();
+						System.out.println("== 쓰고싶은 아이템의 이름을 적으세요 > ");
+						String itemSelect = scn.nextLine();
+						boolean yes = false;
+						for(int i=0; i<inventory.size();i++)
+						{
+							if(itemSelect.equals(inventory.get(i).getItemName()))
+							{
+								System.out.println("== "+inventory.get(i).getItemName()+"을 선택");
+								System.out.println("== "+inventory.get(i).getReadme());
+								if(inventory.get(i).getInstantDamage()>0)
+								{
+									instanceDamage = inventory.get(i).getInstantDamage();
+								}
+								else if(inventory.get(i).getInstantDamage()<0)
+								{
+									heal = -inventory.get(i).getInstantDamage();
+								}
+								inventory.remove(i);
+								yes = true;
+							}
+						}
+						if(yes==false)
+						{
+							System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+				else
+				{
+					sleeps(500);
+					System.out.println();
+					System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
+					System.out.println("== "+selectCard.getReadme());
+					System.out.println();
+					sleeps(500);
+					p1Att = selectCard.getAttack();
+					allAtt += p1Att;
+					p1Def = selectCard.getDefense();
+					allDef += p1Def;
+				}
+				p1Action -= selectCard.getActionConsumption();
 			}
+			
+			p1.setDefense(allDef);
+			p1.setHp(p1.getHp()+heal);
+			mobHp -= instanceDamage;
+			mobHp -= (allAtt-mobDef*3);
 			mob.setHp(mobHp);
 			// 데미지 계산 공식 :: 데미지 == (공격자 공격력 + 무기공격력 + 기타 특별아이템 도핑) - (방어자 방어력 + 방어구 + 기타 특별 아이템 도핑)
 			
-			if(mob.getHp() > 0)
+			if(mob.getHp() > 0) // 몹이 살았을 때 행동패턴.
 			{
 				sleeps(1000);
 				System.out.println();
@@ -257,6 +328,8 @@ public class Game extends Thread // 게임 구현
 					mob.setDefense(mobDef);
 					sleeps(1000);
 				}
+				// p1 행동력 회복
+				p1Action = p1.getAction();
 			}
 			else
 			{
@@ -362,16 +435,15 @@ public class Game extends Thread // 게임 구현
 				{
 					// p1 객체 db에 저장 > 게임 저장
 				}
-				else
-				{
-					System.out.println("== 올바르게 입력하세요...");
-				}
-				
-				if(reinforce!=1)
+				else if(reinforce!=1)
 				{
 					System.out.println();
 					System.out.println("== 이미 강화를 한번 하셨습니다...");
 					System.out.println();
+				}
+				else
+				{
+					System.out.println("== 올바르게 입력하세요...");
 				}
 			} 
 			catch (NumberFormatException e) 
@@ -413,19 +485,25 @@ public class Game extends Thread // 게임 구현
 		int mobHp = boss.getHp();
 		int mobDef = boss.getDefense();
 		int p1Hp = p1.getHp();
-		int p1Att = p1.getAttack();
-		int p1Def = p1.getDefense();
-		int mobAtt = 0;
+		int p1Att = 0;
+		int p1Def = 0;
+		int allAtt = p1.getAttack();
+		int allDef = p1.getDefense();
+		int p1Action = p1.getAction();
+		// 힐 / 투척무기
+		int heal = 0;
+		int instanceDamage = 0;
+		
 		while(t)
 		{
-			sleeps(1000);
+			sleeps(2000);
 			System.out.println();
 			boss.toString();
 			sleeps(1000);
 			System.out.println();
 			p1.toString();
 			
-			sleeps(1000);
+			sleeps(2000);
 			
 			System.out.println("== 당신의 차례 ==");
 			
@@ -441,26 +519,74 @@ public class Game extends Thread // 게임 구현
 			}
 			sleeps(500);
 			System.out.println();
-			
-			System.out.println("== 1 - 5번 카드 중에서 선택 > ");
-			int select = Integer.parseInt(scn.nextLine());
-			CardVO selectCard = selectCard5.get(select-1);
-			
-			sleeps(500);
-			System.out.println();
-			System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
-			System.out.println("== "+selectCard.getReadme());
-			System.out.println();
-			sleeps(500);
-			
-			p1Att = p1.getAttack()+selectCard.getAttack();
-			p1Def = p1.getDefense()+selectCard.getDefense();
-			p1.setDefense(p1Def);
-			if(p1.getAttack()!=p1Att)
+			while(p1Action>0)
 			{
-				mobHp -= (p1Att-mobDef);
+				System.out.println("== 1 - 5번 카드 중에서 선택 > ");
+				System.out.println("== 아이템 사용 : 6번 > ");
+				System.out.println("== ");
+				System.out.println("== 현재 행동력 : "+ p1Action);
+				System.out.println("== ");
+				int select = Integer.parseInt(scn.nextLine());
+				CardVO selectCard = selectCard5.get(select-1);
+				if(select==6) // 전투용 아이템 사용.
+				{
+					while(true)
+					{
+						showInvenFight();
+						System.out.println();
+						System.out.println("== 쓰고싶은 아이템의 이름을 적으세요 > ");
+						String itemSelect = scn.nextLine();
+						boolean yes = false;
+						for(int i=0; i<inventory.size();i++)
+						{
+							if(itemSelect.equals(inventory.get(i).getItemName()))
+							{
+								System.out.println("== "+inventory.get(i).getItemName()+"을 선택");
+								System.out.println("== "+inventory.get(i).getReadme());
+								if(inventory.get(i).getInstantDamage()>0)
+								{
+									instanceDamage = inventory.get(i).getInstantDamage();
+								}
+								else if(inventory.get(i).getInstantDamage()<0)
+								{
+									heal = -inventory.get(i).getInstantDamage();
+								}
+								inventory.remove(i);
+								yes = true;
+							}
+						}
+						if(yes==false)
+						{
+							System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+				else
+				{
+					sleeps(500);
+					System.out.println();
+					System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
+					System.out.println("== "+selectCard.getReadme());
+					System.out.println();
+					sleeps(500);
+					p1Att = selectCard.getAttack();
+					allAtt += p1Att;
+					p1Def = selectCard.getDefense();
+					allDef += p1Def;
+				}
+				p1Action -= selectCard.getActionConsumption();
 			}
+			
+			p1.setDefense(allDef);
+			p1.setHp(p1.getHp()+heal);
+			mobHp -= instanceDamage;
+			mobHp -= (allAtt-mobDef*3);
 			boss.setHp(mobHp);
+			// 데미지 계산 공식 :: 데미지 == (공격자 공격력 + 무기공격력 + 기타 특별아이템 도핑) - (방어자 방어력 + 방어구 + 기타 특별 아이템 도핑)
 			// 데미지 계산 공식 :: 데미지 == (공격자 공격력 + 무기공격력 + 기타 특별아이템 도핑) - (방어자 방어력 + 방어구 + 기타 특별 아이템 도핑)
 			
 			if(boss.getHp() > 0)
@@ -477,7 +603,7 @@ public class Game extends Thread // 게임 구현
 				int rand1 = (int)(Math.random()*10);
 				if(rand1<=0 && rand1<=3)
 				{
-					mobAtt = boss.mobAttack();
+					int mobAtt = boss.mobAttack();
 					p1Hp -= (mobAtt-p1Def);
 					p1.setHp(p1Hp);
 					sleeps(1000);
@@ -490,18 +616,19 @@ public class Game extends Thread // 게임 구현
 				}
 				else if(rand1==6 || rand1==7)
 				{
-					mobAtt = boss.bossAttack();
+					int mobAtt = boss.bossAttack();
 					p1Hp -= (mobAtt-p1Def);
 					p1.setHp(p1Hp);
 					sleeps(1000);
 				}
 				else if(rand1==8 || rand1==9)
 				{
-					mobAtt = boss.bossUltimate();
+					int mobAtt = boss.bossUltimate();
 					p1Hp -= (mobAtt-p1Def);
 					p1.setHp(p1Hp);
 					sleeps(1000);
 				}
+				p1Action = p1.getAction();
 			}
 			else
 			{
@@ -509,6 +636,7 @@ public class Game extends Thread // 게임 구현
 				int getMoney = boss.die();
 				p1.setMoney(p1.getMoney()+getMoney);
 				ItemVO dropItem = specialDrop(); // 랜덤 아이템 드랍.
+				inventory.add(dropItem);
 				t= false;
 			}
 			
@@ -689,12 +817,35 @@ public class Game extends Thread // 게임 구현
 		if(rand >= 0 && rand <= 2)
 		{
 			// 랜덤으로 아이템 생성
-			ItemVO dropItem = new ItemVO();
-			return dropItem;
+			int randItem = (int)(Math.random()*items.getItemList().size());
+			return items.getItemList().get(randItem);
 		}
 		else
 		{
 			return null;
+		}
+	}
+	
+	private void showInven()
+	{
+		System.out.println("== 당신의 인벤토리 목록 ");
+		System.out.println();
+		for(ItemVO item : inventory)
+		{
+			item.toString();
+		}
+	}
+	private void showInvenFight()
+	{
+		System.out.println("== 당신의 인벤토리 목록 ");
+		System.out.println();
+		for(ItemVO item : inventory)
+		{
+			if(item.getInstantDamage()!=0)
+			{
+				sleeps(500);
+				item.toString();
+			}
 		}
 	}
 }

@@ -8,16 +8,14 @@ public class PlayerVO
 	
 	public PlayerVO() {}
 	
-	public PlayerVO(int userId,String userName, int pw) 
+	public PlayerVO(String userName, int pw) 
 	{
 		this.userName = userName;
-		this.userId = userId;
 		this.pw = pw;
 	}
 	
-	public PlayerVO(int userId,String userName,int pw, int progress, int kills, int action, int attack, int defense, int money, int hp) 
+	public PlayerVO(String userName,int pw, int progress, int kills, int action, int attack, int defense, int money, int hp) 
 	{
-		this.userId = userId;
 		this.userName = userName;
 		this.pw = pw;
 		this.progress = progress;

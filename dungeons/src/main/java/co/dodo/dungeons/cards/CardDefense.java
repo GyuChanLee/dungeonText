@@ -7,9 +7,9 @@ public class CardDefense extends CardVO
 		
 		String cardName = "방어";
 		int attack = 0;
-		int defense = 10;
+		int defense = 5;
 		int actionConsumption = 1;
-		String readme = "작은 방패를 듭니다 [ -행동력1 ] ";
+		String readme = "작은 방패를 듭니다 [ 행동력 -1 ] ";
 		setCardId(cardId);
 		setCardName(cardName);
 		setAttack(attack);
