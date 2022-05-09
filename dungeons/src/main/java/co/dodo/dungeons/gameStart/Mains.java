@@ -98,12 +98,12 @@ public class Mains
 		List<CardVO> allCards1 = new ArrayList<CardVO>();
 		allCards = generateCards();
 		
-		for(int i=0; i<allCards.size(); i++)
-		{
-			sf.CardSelect(p1);
-			CardVO tmp = allCards.get(i);
-			sf.cardListInsert(, p1);
-		}
+//		for(int i=0; i<allCards.size(); i++)
+//		{
+//			sf.CardSelect(p1);
+//			CardVO tmp = allCards.get(i);
+//			sf.cardListInsert(, p1);
+//		}
 		
 	}
 	

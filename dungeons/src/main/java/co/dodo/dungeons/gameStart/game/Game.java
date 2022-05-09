@@ -38,6 +38,7 @@ public class Game extends Thread // 게임 구현
 	{
 		checkLogin();
 		items.makeAllItem();
+//		allCards = sf.
 		inventory.add(items.getItem(0));
 		inventory.add(items.getItem(1));
 		inventory.add(items.getItem(2));
