@@ -38,6 +38,8 @@ public class Mains
 				else if(menu == 2)
 				{
 					// 저장된 데이터를 바탕으로 게임 재구성해서 불러오기.
+					Game g = new Game();
+					g.gameRun();
 				}
 				else if(menu == 3)
 				{
@@ -95,15 +97,13 @@ public class Mains
 		sf.playerInsert(p1);
 		p1 = sf.playerSelect(p1);
 		List<CardVO> allCards = new ArrayList<CardVO>();
-		List<CardVO> allCards1 = new ArrayList<CardVO>();
 		allCards = generateCards();
 		
-//		for(int i=0; i<allCards.size(); i++)
-//		{
-//			sf.CardSelect(p1);
-//			CardVO tmp = allCards.get(i);
-//			sf.cardListInsert(, p1);
-//		}
+		for(int i=0; i<allCards.size(); i++) // 초기 생성 5개 카드를 생성 캐릭터의 카드리스트에 넣기.
+		{
+			CardVO tmp = allCards.get(i);
+			sf.cardListInsert(tmp, p1);
+		}
 		
 	}
 	
@@ -115,16 +115,13 @@ public class Mains
 		CardVO general3 = new CardAttack(); 
 		CardVO general4 = new CardDefense(); 
 		CardVO general5 = new CardDefense(); 
-		cardList.add(general1);
 		sf.cardInsert(general1);
-		cardList.add(general2);
 		sf.cardInsert(general2);
-		cardList.add(general3);
 		sf.cardInsert(general3);
-		cardList.add(general4);
 		sf.cardInsert(general4);
-		cardList.add(general5);
 		sf.cardInsert(general5);
+		
+		cardList = sf.Card5Select(); // 초기생성 5개 카드 뽑아옴.
 		
 		return cardList;
 	}

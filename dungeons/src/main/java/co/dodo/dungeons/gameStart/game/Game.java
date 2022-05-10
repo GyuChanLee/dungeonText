@@ -38,7 +38,7 @@ public class Game extends Thread // 게임 구현
 	{
 		checkLogin();
 		items.makeAllItem();
-//		allCards = sf.
+		allCards = sf.CardListSelect(p1); // 유저가 가진 카드리스트 불러오기.
 		inventory.add(items.getItem(0));
 		inventory.add(items.getItem(1));
 		inventory.add(items.getItem(2));
@@ -1105,7 +1105,6 @@ public class Game extends Thread // 게임 구현
 					System.out.println("== Game Over ==");
 					no = false;
 				}
-//				allCards = sf.
 			}
 		}
 		if(t==false)

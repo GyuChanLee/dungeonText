@@ -320,23 +320,28 @@ public class SaveFilesImpl implements SaveFiles
 	}
 	
 	@Override
-	public CardListVO CardListSelect(PlayerVO vo)
+	public List<CardVO> CardListSelect(PlayerVO vo1) // 플레이어가 가진 카드리스트를 가져옴.
 	{
-		String sql = "SELECT * FROM CARDLIST WHERE USERNAME = ?";
-		CardListVO vo1 = null;
+		List<CardVO> list = new ArrayList<CardVO>();
+		String sql = "select a.cardid, b.cardname, b.attack, b.defense, b.actionconsumption,b.readme from cardlist a join card b on(a.cardid=b.cardid) where userid = ?";
+		CardVO vo = null;
 		try
 		{
 			conn = dao.getConnection();
 			psmt = conn.prepareStatement(sql);
-			psmt.setString(1, vo.getUserName()); // 숫자는  ?의 위치, 그 위치에 필요한 인수 넣기.
+			psmt.setInt(1, vo1.getUserId()); // 숫자는  ?의 위치, 그 위치에 필요한 인수 넣기.
 			rs = psmt.executeQuery();
 			
-			if(rs.next())
+			while(rs.next())
 			{
-				vo1 = new CardListVO();
-				vo1.setCardsId(rs.getInt("cardsid"));
-				vo1.setUserId(rs.getInt("userid"));
-				vo1.setCardId(rs.getInt("cardid"));
+				vo = new CardVO();
+				vo.setCardId(rs.getInt("cardid"));
+				vo.setCardName(rs.getString("cardname"));
+				vo.setAttack(rs.getInt("attack"));
+				vo.setDefense(rs.getInt("Defense"));
+				vo.setActionConsumption(rs.getInt("actionConsumption"));
+				vo.setReadme(rs.getString("readme"));
+				list.add(vo);
 			}
 		}
 		catch(SQLException e)
@@ -347,29 +352,31 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			close();
 		}
-		return vo1;
+		return list;
 	}
 	
 	@Override
-	public CardVO CardSelect(PlayerVO vo)
+	public List<CardVO> Card5Select()
 	{
-		String sql = "SELECT * FROM CARD WHERE USERID = ?";
-		CardVO vo1 = null;
+		List<CardVO> list = new ArrayList<CardVO>();
+		CardVO vo;
+		String sql = "SELECT * FROM (SELECT * FROM card ORDER BY cardid DESC) WHERE ROWNUM <= 5"; // 최근만든 5개 초기카드 불러오기.
 		try
 		{
 			conn = dao.getConnection();
 			psmt = conn.prepareStatement(sql);
-			psmt.setInt(1, vo.getUserId()); // 숫자는  ?의 위치, 그 위치에 필요한 인수 넣기.
 			rs = psmt.executeQuery();
 			
-			if(rs.next())
+			while(rs.next())
 			{
-				vo1 = new CardVO();
-				vo1.setCardId(rs.getInt("cardid"));
-				vo1.setCardName(rs.getString("cardname"));
-				vo1.setAttack(rs.getInt("defense"));
-				vo1.setDefense(rs.getInt("actionconsumption"));
-				vo1.setReadme(rs.getString("readme"));
+				vo = new CardVO();
+				vo.setCardId(rs.getInt("cardid"));
+				vo.setCardName(rs.getString("cardname"));
+				vo.setAttack(rs.getInt("attack"));
+				vo.setDefense(rs.getInt("Defense"));
+				vo.setActionConsumption(rs.getInt("actionConsumption"));
+				vo.setReadme(rs.getString("readme"));
+				list.add(vo);
 			}
 		}
 		catch(SQLException e)
@@ -380,7 +387,8 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			close();
 		}
-		return vo1;
+		
+		return list;
 	}
 	
 	private void close() // 커넥션 닫기 메서드
