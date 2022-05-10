@@ -47,8 +47,14 @@ public class PlayerVO
 		System.out.println("공격   : "+attack);
 		System.out.println("방어   : "+defense);
 		System.out.println("소지금 : "+money);
-		System.out.println("개발확인용 진행상황 체크 : "+progress);
 		System.out.println();
 		return null;
+	}
+	
+	public void rank()
+	{
+		System.out.print("이름   : "+userName+"  ");
+		System.out.print("소지금 : "+money+"  ");
+		System.out.println("개발확인용 진행상황 체크 : "+progress);
 	}
 }

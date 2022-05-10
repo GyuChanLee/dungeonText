@@ -29,7 +29,6 @@ public class DataSource
 		{
 			Class.forName(driver);
 			conn = DriverManager.getConnection(url, user, pw);
-			System.out.println("DB연결 굿");
 		}
 		catch(ClassNotFoundException | SQLException e)
 		{

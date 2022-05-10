@@ -13,6 +13,8 @@ public class ItemVO
 	private String readme;
 	private int price; // 판매가격, 플레이어가 팔 때는 반값으로.
 	
+	public ItemVO() {}
+	
 	public ItemVO(String itemName, int attack, int defense, int instantDamage, String readme, int price)
 	{
 		this.itemName = itemName;

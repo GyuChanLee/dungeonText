@@ -44,10 +44,23 @@ public class Mains
 				else if(menu == 3)
 				{
 					// db에서 포인트가 높은 유저의 순위를 뽑아서 가져오기.
+					List<PlayerVO> Scores = sf.playerBestSelect();
+					int i = 1;
+					for(PlayerVO vo : Scores)
+					{
+						System.out.print("== "+i+"등 : ");
+						vo.rank();
+						System.out.println();
+					}
+					
 				}
 				else if(menu == 4)
 				{
 					// 캐릭터 삭제 기능.
+					System.out.println("== 삭제할 탐험가의 이름을 적으시오...");
+					String delName = scn.nextLine();
+					PlayerVO vo = new PlayerVO(delName,123);
+					sf.saveDeletePlayer(vo);
 				}
 				else if(menu == 5)
 				{

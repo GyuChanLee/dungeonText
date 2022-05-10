@@ -39,10 +39,27 @@ public class Game extends Thread // 게임 구현
 		checkLogin();
 		items.makeAllItem();
 		allCards = sf.CardListSelect(p1); // 유저가 가진 카드리스트 불러오기.
-		inventory.add(items.getItem(0));
-		inventory.add(items.getItem(1));
-		inventory.add(items.getItem(2));
-		inventory.add(items.getItem(3));
+		// 플레이어가 착용하던 장비 불러오기 기능.
+		equipment = sf.equipLoad(p1);
+		// 저장해둔 인벤토리 나오게 하기
+		
+		// 임시 : 게임 첫 시작일 때만 아이템 생성 후 인벤에 기본 아이템 4개 추가.
+		if(p1.getProgress()>0)
+		{
+			sf.itemInsert(items.getItem(0));
+			sf.inventoryInsert(sf.itemSelect(), p1);
+			sf.itemInsert(items.getItem(1));
+			sf.inventoryInsert(sf.itemSelect(), p1);
+			sf.itemInsert(items.getItem(2));
+			sf.inventoryInsert(sf.itemSelect(), p1);
+			sf.itemInsert(items.getItem(3));
+			sf.inventoryInsert(sf.itemSelect(), p1);
+			sf.itemInsert(items.getItem(4));
+			sf.inventoryInsert(sf.itemSelect(), p1);
+			sf.itemInsert(items.getItem(5));
+			sf.inventoryInsert(sf.itemSelect(), p1);
+		}
+		inventory  = sf.showInven(p1);
 		if(no==false)
 		{
 			return;
@@ -79,6 +96,8 @@ public class Game extends Thread // 게임 구현
 			
 			if(select == 3)
 			{
+				saveGame();
+				sleeps(500);
 				System.out.println("== 게임 저장 완료! ");
 			}
 			else if(select == 2)
@@ -364,6 +383,8 @@ public class Game extends Thread // 게임 구현
 				sleeps(1000);
 				int getMoney = mob.die();
 				p1.setMoney(p1.getMoney()+getMoney);
+				p1.setKills(p1.getKills()+1);
+				// 랜덤하게 카드 드랍 기능 > 카드 랜덤 생성, db 저장(card, cardlist), 갱신된 db cardlist 불러오기.
 				t= false;
 			}
 			
@@ -437,6 +458,7 @@ public class Game extends Thread // 게임 구현
 						System.out.println();
 						System.out.println("강화 후 카드의 공격력 : "+allCards.get(enforce-1).getAttack());
 						System.out.println();
+						sf.cardUpdate(allCards.get(enforce-1));
 					}
 					else
 					{
@@ -445,6 +467,7 @@ public class Game extends Thread // 게임 구현
 						System.out.println();
 						System.out.println("강화 후 카드의 방어력 : "+allCards.get(enforce-1).getDefense());
 						System.out.println();
+						sf.cardUpdate(allCards.get(enforce-1));
 					}
 					reinforce--;
 				}
@@ -456,6 +479,9 @@ public class Game extends Thread // 게임 구현
 				else if(select == 4)
 				{
 					// p1 객체 db에 저장 > 게임 저장
+					saveGame();
+					sleeps(500);
+					System.out.println("== 게임 저장 완료! ");
 				}
 				else if(reinforce!=1)
 				{
@@ -617,8 +643,6 @@ public class Game extends Thread // 게임 구현
 			mobHp -= instanceDamage;
 			mobHp -= (allAtt-mobDef*3);
 			boss.setHp(mobHp);
-			// 데미지 계산 공식 :: 데미지 == (공격자 공격력 + 무기공격력 + 기타 특별아이템 도핑) - (방어자 방어력 + 방어구 + 기타 특별 아이템 도핑)
-			// 데미지 계산 공식 :: 데미지 == (공격자 공격력 + 무기공격력 + 기타 특별아이템 도핑) - (방어자 방어력 + 방어구 + 기타 특별 아이템 도핑)
 			
 			if(boss.getHp() > 0)
 			{
@@ -666,8 +690,10 @@ public class Game extends Thread // 게임 구현
 				sleeps(1000);
 				int getMoney = boss.die();
 				p1.setMoney(p1.getMoney()+getMoney);
+				p1.setKills(p1.getKills()+5);
 				ItemVO dropItem = specialDrop(); // 랜덤 아이템 드랍.
 				inventory.add(dropItem);
+				// 랜덤하게 카드 드랍 기능 > 카드 랜덤 생성, db 저장(card, cardlist), 갱신된 db cardlist 불러오기.
 				t= false;
 			}
 			
@@ -973,11 +999,13 @@ public class Game extends Thread // 게임 구현
 	{
 		System.out.println("== 당신의 인벤토리 목록 ");
 		System.out.println();
+		inventory  = sf.showInven(p1);
 		int i = 1;
 		for(ItemVO item : inventory)
 		{
 			System.out.print(i+"번째 ");
 			item.toString();
+			// db의 진짜 인벤토리 셀렉 보여주기.
 			System.out.println();
 			i++;
 		}
@@ -994,6 +1022,7 @@ public class Game extends Thread // 게임 구현
 			{
 				sleeps(500);
 				item.toString();
+				System.out.println();
 			}
 		}
 	}
@@ -1040,12 +1069,14 @@ public class Game extends Thread // 게임 구현
 				}
 				else
 				{
-					if(equipment[0]!=null)
+					if(equipment[0]!=null) // 이미 착용중인 것이 있을 때, 착용해제.
 					{
 						p1.setAttack(p1.getAttack()-equipment[0].getAttack());
+						sf.equipDelete(equipment[0]); // equip 테이블에 있던 착용장비 삭제.
 					}
 					equipment[0] = chageItem; // 무기칸 변경
 					p1.setAttack(p1.getAttack()+equipment[0].getAttack());
+					sf.equipInsert(chageItem, p1); // equip테이블에 착용장비 넣기.
 				}
 			}
 			else if(changeOld==2)
@@ -1063,9 +1094,11 @@ public class Game extends Thread // 게임 구현
 					if(equipment[1]!=null)
 					{
 						p1.setDefense(p1.getDefense()-equipment[1].getDefense());
+						sf.equipDelete(equipment[1]); // equip 테이블에 있던 착용장비 삭제.
 					}
 					equipment[1] = chageItem; // 방어구칸 변경
 					p1.setDefense(p1.getDefense()+equipment[1].getDefense());
+					sf.equipInsert(chageItem, p1); // equip테이블에 착용장비 넣기.
 				}
 			}
 		}
@@ -1113,6 +1146,26 @@ public class Game extends Thread // 게임 구현
 			System.out.println();
 			System.out.println("== Game Over ==");
 			no = false;
+		}
+	}
+	
+	private void saveGame()
+	{
+		// db > 현재 캐릭터 객체 상태 저장
+		sf.playerUpdate(p1); // 캐릭터 상태 저장
+	}
+	
+	private void dropItems()
+	{
+		int rand = (int)(Math.random()*100);
+	}
+	
+	private void dropCards()
+	{
+		int rand = (int)(Math.random()*100);
+		if(rand >= 0 && rand <= 30)
+		{
+			
 		}
 	}
 }

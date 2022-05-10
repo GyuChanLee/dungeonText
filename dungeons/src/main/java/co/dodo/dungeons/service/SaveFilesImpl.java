@@ -199,7 +199,7 @@ public class SaveFilesImpl implements SaveFiles
 	public int cardUpdate(CardVO vo) 
 	{
 		int n = 0;
-		String sql = "update card set attack = ?, defense = ? where cardid = ?)";
+		String sql = "UPDATE CARD SET ATTACK = ?, DEFENSE = ? WHERE CARDID = ?";
 		try
 		{
 			conn = dao.getConnection();
@@ -376,6 +376,204 @@ public class SaveFilesImpl implements SaveFiles
 				vo.setDefense(rs.getInt("Defense"));
 				vo.setActionConsumption(rs.getInt("actionConsumption"));
 				vo.setReadme(rs.getString("readme"));
+				list.add(vo);
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			close();
+		}
+		
+		return list;
+	}
+	
+	public int equipInsert(ItemVO vo1, PlayerVO vo2) // 장비칸에 착용한 아이템 장비테이블에 저장.
+	{
+		int n = 0;
+		String sql = "INSERT INTO EQUIP VALUES(EQUIP_SEQ.NEXTVAL,?,?)";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setInt(1, vo1.getItemId());
+			psmt.setInt(2, vo2.getUserId());
+			n = psmt.executeUpdate();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return n;
+	}
+	
+	public int equipDelete(ItemVO vo)
+	{
+		int n = 0;
+		String sql = "DELETE EQUIP WHERE ITEMID = ?";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setInt(1, vo.getItemId());
+			n = psmt.executeUpdate();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return n;
+	}
+	
+	public ItemVO[] equipLoad(PlayerVO vo1)
+	{
+		ItemVO[] arr = new ItemVO[2];
+		ItemVO vo = null;
+		String sql = "SELECT * FROM EQUIP JOIN ITEM ON(equip.itemid = item.itemid) WHERE USERID = ?";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setInt(1, vo1.getUserId()); // 숫자는  ?의 위치, 그 위치에 필요한 인수 넣기.
+			rs = psmt.executeQuery();
+			int i = 0;
+			while(rs.next())
+			{
+				vo = new ItemVO();
+				vo.setItemId(rs.getInt("itemid"));
+				vo.setItemName(rs.getString("itemname"));
+				vo.setAttack(rs.getInt("attack"));
+				vo.setDefense(rs.getInt("Defense"));
+				vo.setReadme(rs.getString("readme"));
+				vo.setPrice(rs.getInt("price"));
+				arr[i] = vo;
+				i++;
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			close();
+		}
+		return arr;
+	}
+	
+	public ItemVO itemSelect() // 최근에 넣은 아이템 불러오기.
+	{
+		ItemVO vo= null;
+		String sql = "SELECT * FROM (SELECT * FROM item ORDER BY itemid DESC) WHERE ROWNUM <= 1";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			rs = psmt.executeQuery();
+			
+			if(rs.next())
+			{
+				vo = new ItemVO();
+				vo.setItemId(rs.getInt("itemid"));
+				vo.setItemName(rs.getString("itemname"));
+				vo.setAttack(rs.getInt("attack"));
+				vo.setDefense(rs.getInt("Defense"));
+				vo.setReadme(rs.getString("readme"));
+				vo.setPrice(rs.getInt("price"));
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			close();
+		}
+		return vo;
+	}
+	
+	public List<ItemVO> showInven(PlayerVO p1)
+	{
+		List<ItemVO> list = new ArrayList<ItemVO>();
+		ItemVO vo;
+		String sql = "SELECT * FROM INVENTORY A JOIN ITEM B ON(A.ITEMID = B.ITEMID) WHERE USERID = ? ORDER BY INVENID";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setInt(1, p1.getUserId());
+			rs = psmt.executeQuery();
+			
+			while(rs.next())
+			{
+				vo = new ItemVO();
+				vo.setItemId(rs.getInt("itemid"));
+				vo.setItemName(rs.getString("itemname"));
+				vo.setAttack(rs.getInt("attack"));
+				vo.setDefense(rs.getInt("Defense"));
+				vo.setReadme(rs.getString("readme"));
+				vo.setPrice(rs.getInt("price"));
+				list.add(vo);
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			close();
+		}
+		
+		return list;
+	}
+	
+	public int saveDeletePlayer(PlayerVO vo)
+	{
+		int n =0;
+		String sql ="DELETE PLAYER WHERE USERID = ?";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setInt(1, vo.getUserId());
+			n = psmt.executeUpdate();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return n;
+	}
+	
+	public List<PlayerVO> playerBestSelect()
+	{
+		List<PlayerVO> list = new ArrayList<PlayerVO>();
+		PlayerVO vo;
+		String sql = "SELECT * FROM PLAYER ORDER BY KILLS DESC";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			rs = psmt.executeQuery();
+			
+			while(rs.next())
+			{
+				vo = new PlayerVO();
+				vo.setUserId(rs.getInt("userid"));
+				vo.setPw(rs.getInt("pw"));
+				vo.setProgress(rs.getInt("progress"));
+				vo.setKills(rs.getInt("kills"));
+				vo.setAction(rs.getInt("action"));
+				vo.setAttack(rs.getInt("attack"));
+				vo.setDefense(rs.getInt("defense"));
+				vo.setMoney(rs.getInt("money"));
+				vo.setHp(rs.getInt("hp"));
+				vo.setUserName(rs.getString("username"));
 				list.add(vo);
 			}
 		}
