@@ -107,14 +107,14 @@ public class Game extends Thread // 게임 구현
 			}
 			else if(select == 1)
 			{
-				for(int i=0; i<10; i++)
+				while(true)
 				{
-					if(p1.getProgress()==4) // 진행상황 5층 > 특별 이벤트 방.
+					if((p1.getProgress()%10)==4) // 진행상황 5층 > 특별 이벤트 방.
 					{
 						stairs();
 						climbUpEvent();
 					}
-					else if(p1.getProgress()==9) // 10층 > 보스방
+					else if((p1.getProgress()%10)==9) // 10층 > 보스방
 					{
 						stairs();
 						climbUpBoss();
@@ -129,6 +129,10 @@ public class Game extends Thread // 게임 구현
 					{
 						p1.setProgress(0);
 						return;
+					}
+					if((p1.getProgress()%10)==0)
+					{
+						break;
 					}
 				}
 				
@@ -420,7 +424,14 @@ public class Game extends Thread // 게임 구현
 		int reinforce = 1;
 		while(true)
 		{
-			System.out.println("== 현재 층은 "+(p1.getProgress()+1)+"층 입니다...");
+			if((p1.getProgress()+1)%10==0)
+			{
+				System.out.println("== 현재 층은 꼭대기 층 입니다...");
+			}
+			else
+			{
+				System.out.println("== 현재 층은 "+((p1.getProgress()+1)%10)+"층 입니다...");
+			}
 			System.out.println();
 			System.out.println("== 1. 다음층으로 올라가기");
 			System.out.println("== 2. 강화");
