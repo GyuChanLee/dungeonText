@@ -515,6 +515,7 @@ public class SaveFilesImpl implements SaveFiles
 				vo.setItemName(rs.getString("itemname"));
 				vo.setAttack(rs.getInt("attack"));
 				vo.setDefense(rs.getInt("Defense"));
+				vo.setInstantDamage(rs.getInt("instancedamage"));
 				vo.setReadme(rs.getString("readme"));
 				vo.setPrice(rs.getInt("price"));
 				list.add(vo);

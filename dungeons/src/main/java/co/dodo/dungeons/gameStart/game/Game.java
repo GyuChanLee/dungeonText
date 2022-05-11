@@ -525,7 +525,7 @@ public class Game extends Thread // 게임 구현
 				{
 					while(true)
 					{
-						showInvenFight();
+						showInvenFight();  // 웨 안나옴???
 						System.out.println();
 						System.out.println("== 쓰고싶은 아이템의 이름을 적으세요 > ");
 						System.out.println("== 뒤로가기 : \"back\" 입력 > ");
@@ -535,7 +535,7 @@ public class Game extends Thread // 게임 구현
 						{
 							if(itemSelect.equals(inventory.get(i).getItemName()))
 							{
-								System.out.println("== "+inventory.get(i).getItemName()+"을 선택");
+								System.out.println("== "+inventory.get(i).getItemName()+"을 선택");  // 아이템아이디로 구분하기. > 이름 중복문제 해결
 								System.out.println("== "+inventory.get(i).getReadme());
 								if(inventory.get(i).getInstantDamage()>0)
 								{
@@ -1329,6 +1329,7 @@ public class Game extends Thread // 게임 구현
 	{
 		System.out.println("== 당신의 인벤토리 목록 ");
 		System.out.println();
+		inventory.clear();
 		inventory  = sf.showInven(p1);
 		int i = 1;
 		for(ItemVO item : inventory)
@@ -1345,13 +1346,17 @@ public class Game extends Thread // 게임 구현
 	{
 		System.out.println("== 당신의 인벤토리 목록 ");
 		System.out.println();
+		inventory.clear();
+		inventory  = sf.showInven(p1);
+		int i = 1;
 		for(ItemVO item : inventory)
 		{
 			if(item.getInstantDamage()!=0)
 			{
-				sleeps(500);
+				System.out.print(i+"번째 ");
 				item.toString();
 				System.out.println();
+				i++;
 			}
 		}
 	}
