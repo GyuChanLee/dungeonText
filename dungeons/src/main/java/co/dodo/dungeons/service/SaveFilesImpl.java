@@ -323,7 +323,7 @@ public class SaveFilesImpl implements SaveFiles
 	public List<CardVO> CardListSelect(PlayerVO vo1) // 플레이어가 가진 카드리스트를 가져옴.
 	{
 		List<CardVO> list = new ArrayList<CardVO>();
-		String sql = "select a.cardid, b.cardname, b.attack, b.defense, b.actionconsumption,b.readme from cardlist a join card b on(a.cardid=b.cardid) where userid = ?";
+		String sql = "SELECT A.CARDID, B.CARDNAME, B.ATTACK, B.DEFENSE, B.ACTIONCONSUMPTION,B.README FROM CARDLIST A JOIN CARD B ON(A.CARDID=B.CARDID) WHERE USERID = ?";
 		CardVO vo = null;
 		try
 		{
@@ -535,12 +535,13 @@ public class SaveFilesImpl implements SaveFiles
 	public int saveDeletePlayer(PlayerVO vo)
 	{
 		int n =0;
-		String sql ="DELETE PLAYER WHERE USERID = ?";
+		String sql ="DELETE PLAYER WHERE USERNAME = ? AND PW = ?";
 		try
 		{
 			conn = dao.getConnection();
 			psmt = conn.prepareStatement(sql);
-			psmt.setInt(1, vo.getUserId());
+			psmt.setString(1, vo.getUserName());
+			psmt.setInt(2, vo.getPw());
 			n = psmt.executeUpdate();
 		}
 		catch(SQLException e)
@@ -554,7 +555,7 @@ public class SaveFilesImpl implements SaveFiles
 	{
 		List<PlayerVO> list = new ArrayList<PlayerVO>();
 		PlayerVO vo;
-		String sql = "SELECT * FROM PLAYER ORDER BY KILLS DESC";
+		String sql = "SELECT * FROM PLAYER ORDER BY KILLS DESC, PROGRESS DESC, MONEY DESC";
 		try
 		{
 			conn = dao.getConnection();
@@ -587,6 +588,38 @@ public class SaveFilesImpl implements SaveFiles
 		}
 		
 		return list;
+	}
+	
+	public CardVO recentCardSelect()
+	{
+		CardVO vo = null;
+		String sql = "SELECT * FROM (SELECT * FROM card ORDER BY cardid DESC) WHERE ROWNUM <= 1";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			rs = psmt.executeQuery();
+			
+			if(rs.next())
+			{
+				vo = new CardVO();
+				vo.setCardId(rs.getInt("cardid"));
+				vo.setCardName(rs.getString("cardname"));
+				vo.setAttack(rs.getInt("attack"));
+				vo.setDefense(rs.getInt("Defense"));
+				vo.setActionConsumption(rs.getInt("actionConsumption"));
+				vo.setReadme(rs.getString("readme"));
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			close();
+		}
+		return vo;
 	}
 	
 	private void close() // 커넥션 닫기 메서드

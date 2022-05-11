@@ -33,8 +33,8 @@ public class PlayerVO
 	private int progress = 0; // 진행상황
 	private int kills = 0; //킬수
 	private int action = 3; // 행동력
-	private int attack = 20;
-	private int defense = 20;
+	private int attack = 10;
+	private int defense = 5;
 	private int money = 0;
 	private int hp = 100;
 	
@@ -55,6 +55,6 @@ public class PlayerVO
 	{
 		System.out.print("이름   : "+userName+"  ");
 		System.out.print("소지금 : "+money+"  ");
-		System.out.println("개발확인용 진행상황 체크 : "+progress);
+		System.out.println("돌파한 방의 개수 : "+progress);
 	}
 }

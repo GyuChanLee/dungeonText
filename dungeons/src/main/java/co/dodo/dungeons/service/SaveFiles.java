@@ -32,4 +32,6 @@ public interface SaveFiles
 	
 	int saveDeletePlayer(PlayerVO vo); // 세이브파일 삭제 
 	List<PlayerVO> playerBestSelect(); // kill 포인트로 계산.
+	
+	CardVO recentCardSelect(); // 가장 바로 최근에 넣은 카드를 가져오기.
 }

@@ -46,21 +46,40 @@ public class Mains
 					// db에서 포인트가 높은 유저의 순위를 뽑아서 가져오기.
 					List<PlayerVO> Scores = sf.playerBestSelect();
 					int i = 1;
+					System.out.println();
+					System.out.println();
+					System.out.println();
+					System.out.println("===================================== 명예의 전당 =====================================");
+					System.out.println();
 					for(PlayerVO vo : Scores)
 					{
 						System.out.print("== "+i+"등 : ");
 						vo.rank();
 						System.out.println();
+						i++;
 					}
-					
+					System.out.println();
+					System.out.println();
 				}
 				else if(menu == 4)
 				{
 					// 캐릭터 삭제 기능.
-					System.out.println("== 삭제할 탐험가의 이름을 적으시오...");
-					String delName = scn.nextLine();
-					PlayerVO vo = new PlayerVO(delName,123);
-					sf.saveDeletePlayer(vo);
+					try 
+					{
+						System.out.println("== 삭제할 탐험가의 이름을 적으시오...");
+						String delName = scn.nextLine();
+						System.out.println("== 비밀번호를 입력하세요...");
+						int delPw = Integer.parseInt(scn.nextLine());
+						PlayerVO vo = new PlayerVO(delName,delPw);
+						sf.saveDeletePlayer(vo);
+						System.out.println("== 삭제 완료!");
+						System.out.println();
+					} 
+					catch (Exception e) 
+					{
+						System.out.println("== 삭제할 이름 혹은 비밀번호가 다릅니다!");
+						System.out.println("== 삭제 불가!");
+					}
 				}
 				else if(menu == 5)
 				{
