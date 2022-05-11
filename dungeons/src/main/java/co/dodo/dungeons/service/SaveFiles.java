@@ -23,7 +23,6 @@ public interface SaveFiles
 	int cardListInsert(CardVO vo1,PlayerVO vo2); // 카드리스트에 넣기
 	InventoryVO InventorySelect(PlayerVO vo); // 인벤토리 불러오기 해당 플레이어
 	List<CardVO> CardListSelect(PlayerVO vo); // 카드리스트 불러오기 
-	// 얻은 아이템 인벤토리에 넣기 > 아이템 고유번호 저장, 그 번호 인벤db에 저장.
 	List<CardVO> Card5Select(); // 초기 5개 카드
 	int equipInsert(ItemVO vo1, PlayerVO vo2); // 플레이어 장비에 장비 넣기. (테이블에 넣기)
 	int equipDelete(ItemVO vo); // 장비에 있던 아이템 equip테이블에서 제거.
@@ -34,4 +33,5 @@ public interface SaveFiles
 	List<PlayerVO> playerBestSelect(); // kill 포인트로 계산.
 	
 	CardVO recentCardSelect(); // 가장 바로 최근에 넣은 카드를 가져오기.
+	int itemDelete(ItemVO vo); // 아이템 한개 삭제 > 아이템 판매 기능.
 }

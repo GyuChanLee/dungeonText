@@ -10,6 +10,7 @@ import co.dodo.dungeons.items.ItemList;
 import co.dodo.dungeons.items.ItemVO;
 import co.dodo.dungeons.maps.MapStage1;
 import co.dodo.dungeons.maps.MapStage2;
+import co.dodo.dungeons.maps.MapStage3;
 import co.dodo.dungeons.maps.Maps;
 import co.dodo.dungeons.maps.Stages;
 import co.dodo.dungeons.service.SaveFiles;
@@ -20,9 +21,14 @@ import co.dodo.dungeons.units.Boss2;
 import co.dodo.dungeons.units.Goblin;
 import co.dodo.dungeons.units.LivingArmor;
 import co.dodo.dungeons.units.Oak;
+import co.dodo.dungeons.units.Skeleton;
 import co.dodo.dungeons.units.Slime;
+import co.dodo.dungeons.units.Specter;
 import co.dodo.dungeons.units.Units;
 import co.dodo.dungeons.units.Vampire;
+import co.dodo.dungeons.units.Warden;
+import co.dodo.dungeons.units.Witch;
+import co.dodo.dungeons.units.Zombie;
 import co.dodo.dungeons.vo.PlayerVO;
 
 public class Game extends Thread // 게임 구현 
@@ -58,7 +64,7 @@ public class Game extends Thread // 게임 구현
 		while(t)
 		{
 			// 던전탐험 첫시작.
-			if(p1.getProgress()>=0 && p1.getProgress()<10)
+			if(p1.getProgress()>=0 && p1.getProgress()<10) // 진행상황에 따라 맵 선택
 			{
 				sleeps(1000);
 				stage.stage1();
@@ -74,6 +80,15 @@ public class Game extends Thread // 게임 구현
 				if(map==null)
 				{
 					map = new MapStage2();
+				}
+			}
+			else if(p1.getProgress()>=20 && p1.getProgress()<30)
+			{
+				sleeps(1000);
+				stage.stage3();
+				if(map==null)
+				{
+					map = new MapStage3();
 				}
 			}	
 			
@@ -220,7 +235,7 @@ public class Game extends Thread // 게임 구현
 			
 	}
 	
-	private Units mob() // 임시 몹 랜덤 생성 기능
+	private Units mob() // Stage에 맞춰 몹 랜덤 생성.
 	{
 		int randSel = (int)(Math.random()*5);
 		Units mobs;
@@ -241,7 +256,7 @@ public class Game extends Thread // 게임 구현
 			}
 			else if(randSel==1)
 			{
-				if(p1.getProgress()>=0 && p1.getProgress() <= 4) // 0-3층일 때 약하게 리젠
+				if(p1.getProgress()>=0 && p1.getProgress() <= 4) 
 				{
 					mobs = new Goblin(200,15,0,30);
 					return mobs;
@@ -254,7 +269,7 @@ public class Game extends Thread // 게임 구현
 			}
 			else if(randSel==2)
 			{
-				if(p1.getProgress()>=0 && p1.getProgress() <= 4) // 0-3층일 때 약하게 리젠
+				if(p1.getProgress()>=0 && p1.getProgress() <= 4) 
 				{
 					mobs = new LivingArmor(100,10,8,30);
 					return mobs;
@@ -267,7 +282,7 @@ public class Game extends Thread // 게임 구현
 			}
 			else if(randSel==3)
 			{
-				if(p1.getProgress()>=0 && p1.getProgress() <= 4) // 0-3층일 때 약하게 리젠
+				if(p1.getProgress()>=0 && p1.getProgress() <= 4) 
 				{
 					mobs = new Slime(100,15,5,30);
 					return mobs;
@@ -280,7 +295,7 @@ public class Game extends Thread // 게임 구현
 			}
 			else if(randSel==4)
 			{
-				if(p1.getProgress()>=0 && p1.getProgress() <= 4) // 0-3층일 때 약하게 리젠
+				if(p1.getProgress()>=0 && p1.getProgress() <= 4) 
 				{
 					mobs = new Vampire(150,25,5,50);
 					return mobs;
@@ -297,66 +312,135 @@ public class Game extends Thread // 게임 구현
 		{
 			if(randSel==0)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) // 0-3층일 때 약하게 리젠
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new Oak(100,15,5,30);
+					mobs = new Skeleton(300,16,5,50);
 					return mobs;
 				}
 				else
 				{
-					mobs = new Oak(200,20,10,70);
+					mobs = new Skeleton(400,22,10,80);
 					return mobs;
 				}
 			}
 			else if(randSel==1)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) // 0-3층일 때 약하게 리젠
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new Goblin(200,15,0,30);
+					mobs = new Zombie(300,18,0,30);
 					return mobs;
 				}
 				else
 				{
-					mobs = new Goblin(300,30,3,40);
+					mobs = new Zombie(450,32,3,40);
 					return mobs;
 				}
 			}
 			else if(randSel==2)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) // 0-3층일 때 약하게 리젠
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new LivingArmor(100,10,8,30);
+					mobs = new Witch(250,15,18,30);
 					return mobs;
 				}
 				else
 				{
-					mobs = new LivingArmor(200,10,15,50);
+					mobs = new Witch(400,15,25,30);
 					return mobs;
 				}
 			}
 			else if(randSel==3)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) // 0-3층일 때 약하게 리젠
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new Slime(100,15,5,30);
+					mobs = new Specter(300,35,5,60);
 					return mobs;
 				}
 				else
 				{
-					mobs = new Slime(200,20,10,40);
+					mobs = new Specter(500,40,10,90);
 					return mobs;
 				}
 			}
 			else if(randSel==4)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) // 0-3층일 때 약하게 리젠
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new Vampire(150,25,5,50);
+					mobs = new Warden(150,35,5,90);
 					return mobs;
 				}
 				else
 				{
-					mobs = new Vampire(300,35,5,50);
+					mobs = new Warden(300,40,5,110);
+					return mobs;
+				}
+			}
+		}
+		
+		if(p1.getProgress()>=20 && p1.getProgress()<30) // 진행상황이 stage3일 시.  5/11 아직 stage 몹/보스 안만듬
+		{
+			if(randSel==0)
+			{
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				{
+					mobs = new Skeleton(300,16,5,50);
+					return mobs;
+				}
+				else
+				{
+					mobs = new Skeleton(400,22,10,80);
+					return mobs;
+				}
+			}
+			else if(randSel==1)
+			{
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				{
+					mobs = new Zombie(300,18,0,30);
+					return mobs;
+				}
+				else
+				{
+					mobs = new Zombie(450,32,3,40);
+					return mobs;
+				}
+			}
+			else if(randSel==2)
+			{
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				{
+					mobs = new Witch(250,15,18,30);
+					return mobs;
+				}
+				else
+				{
+					mobs = new Witch(400,15,25,30);
+					return mobs;
+				}
+			}
+			else if(randSel==3)
+			{
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				{
+					mobs = new Specter(300,35,5,60);
+					return mobs;
+				}
+				else
+				{
+					mobs = new Specter(500,40,10,90);
+					return mobs;
+				}
+			}
+			else if(randSel==4)
+			{
+				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				{
+					mobs = new Warden(150,35,5,90);
+					return mobs;
+				}
+				else
+				{
+					mobs = new Warden(300,40,5,110);
 					return mobs;
 				}
 			}
@@ -402,22 +486,31 @@ public class Game extends Thread // 게임 구현
 			{
 				int ran = (int)(Math.random()*allCards.size());
 				selectCard5.add(allCards.get(ran));
+				for(int j=0; j<i; j++)
+				{
+					if(selectCard5.get(i)==selectCard5.get(j))
+					{
+						selectCard5.remove(i);
+						i--;
+					}
+				}
 			}
 			
-			System.out.println();
-			System.out.println("== 이번 턴의 카드 ==");
-			int j = 1;
-			for(CardVO card : selectCard5) // 카드 5개를 보여줌.
-			{
-				sleeps(500);
-				System.out.print(j+"번째 카드 : ");
-				System.out.println(card.toString());
-				j++;
-			}
-			sleeps(500);
-			System.out.println();
 			while(p1Action>0)
 			{
+				System.out.println();
+				System.out.println("== 이번 턴의 카드 ==");
+				int j = 1;
+				for(CardVO card : selectCard5) // 카드 5개를 보여줌.
+				{
+					sleeps(100);
+					System.out.print(j+"번째 카드 : ");
+					System.out.println(card.toString());
+					j++;
+				}
+				sleeps(500);
+				System.out.println();
+				
 				System.out.println("== 1 - 5번 카드 중에서 선택 > ");
 				System.out.println("== 아이템 사용 : 6번 > ");
 				System.out.println("== 현재 행동력 : "+ p1Action);
@@ -472,24 +565,33 @@ public class Game extends Thread // 게임 구현
 				}
 				else
 				{
-					sleeps(500);
-					System.out.println();
-					System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
-					System.out.println("== "+selectCard.getReadme());
-					System.out.println();
-					sleeps(500);
-					p1Att = selectCard.getAttack();
-					allAtt += p1Att;
-					p1Def = selectCard.getDefense();
-					allDef += p1Def;
-					if(selectCard.getAttack()!=0)
+					if(p1Action >= selectCard.getActionConsumption())
 					{
-						attackCount++;
+						sleeps(500);
+						System.out.println();
+						System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
+						System.out.println("== "+selectCard.getReadme());
+						System.out.println();
+						sleeps(500);
+						p1Att = selectCard.getAttack();
+						allAtt += p1Att;
+						p1Def = selectCard.getDefense();
+						allDef += p1Def;
+						
+						if(selectCard.getAttack()!=0)
+						{
+							attackCount++;
+						}
+						p1Action -= selectCard.getActionConsumption();
+						selectCard5.remove(selectCard);
 					}
-				}
-				if(selectCard!=null)
-				{
-					p1Action -= selectCard.getActionConsumption();
+					else
+					{
+						sleeps(500);
+						System.out.println("== 행동력이 부족합니다...");
+						System.out.println();
+						sleeps(500);
+					}
 				}
 			}
 			
@@ -688,6 +790,12 @@ public class Game extends Thread // 게임 구현
 			System.out.println();
 			fightBoss(p1,boss);
 		}
+		else if(p1.getProgress()==29) // boss3 구현하기
+		{
+			Boss boss = new Boss2(2000, 50, 10, 200);
+			System.out.println();
+			fightBoss(p1,boss);
+		}
 		
 		p1.setProgress(p1.getProgress()+1);
 	}
@@ -729,6 +837,14 @@ public class Game extends Thread // 게임 구현
 			{
 				int ran = (int)(Math.random()*allCards.size());
 				selectCard5.add(allCards.get(ran));
+				for(int j=0; j<i; j++)
+				{
+					if(selectCard5.get(i)==selectCard5.get(j))
+					{
+						selectCard5.remove(i);
+						i--;
+					}
+				}
 			}
 			
 			System.out.println();
@@ -897,7 +1013,7 @@ public class Game extends Thread // 게임 구현
 		System.out.println();
 		System.out.println();
 		sleeps(1000);
-		int rand = (int)(Math.random()*3); // 3가지 경우의 수
+		int rand = (int)(Math.random()*1); // 3가지 경우의 수
 		
 		if(rand==0)
 		{
@@ -918,7 +1034,7 @@ public class Game extends Thread // 게임 구현
 				if(check1==true && check2==true && check3==true && check4==true)
 				{
 					System.out.println();
-					System.out.println("== 상인 : 감사합니다... 당신의 탐험이 무탈하길 기원하지요...");
+					System.out.println("== 상인 : 감사합니다... 당신이 무탈하게 탐험을 끝내길 기원하지요...");
 					System.out.println();
 					p1.setProgress(p1.getProgress()+1);
 					return;
@@ -933,6 +1049,7 @@ public class Game extends Thread // 게임 구현
 				ItemVO sell2 = items.getItem(randbuy2);
 				ItemVO sell3 = items.getItem(randbuy3);
 				ItemVO sell4 = items.getItem(randbuy4);
+				
 				System.out.println();
 				System.out.print("1번 상품 == ");
 				if(check1==true)
@@ -943,7 +1060,7 @@ public class Game extends Thread // 게임 구현
 				{
 					sell1.toString();
 				}
-				System.out.println();
+				
 				System.out.print("2번 상품 == ");
 				if(check2==true)
 				{
@@ -953,7 +1070,7 @@ public class Game extends Thread // 게임 구현
 				{
 					sell2.toString();
 				}
-				System.out.println();
+				
 				System.out.print("3번 상품 == ");
 				if(check3==true)
 				{
@@ -963,7 +1080,7 @@ public class Game extends Thread // 게임 구현
 				{
 					sell3.toString();
 				}
-				System.out.println();
+				
 				System.out.print("4번 상품 == ");
 				if(check4==true)
 				{
@@ -974,9 +1091,12 @@ public class Game extends Thread // 게임 구현
 					sell4.toString();
 				}
 				System.out.println();
+				
+				System.out.println("== 5. 판매  |  6. 나가기");
 				System.out.println("== 선택 > ");
 				int buy = Integer.parseInt(scn.nextLine());
 				System.out.println();
+				
 				if(buy==1)
 				{
 					if(sell1.getPrice()>p1.getMoney())
@@ -1050,6 +1170,29 @@ public class Game extends Thread // 게임 구현
 					}
 				}
 				else if(buy==5)
+				{
+					// 내 아이템 판매 기능.
+					System.out.println("== 상인 : 판매할 아이템을 꺼내 보십시오...");
+					System.out.println();
+					showInven();
+					System.out.println("== 판매할 아이템을 선택 > ");
+					try 
+					{
+						int sellItem = Integer.parseInt(scn.nextLine());
+						ItemVO tmp = inventory.get(sellItem-1);
+						p1.setMoney(p1.getMoney()+tmp.getPrice());
+						System.out.println();
+						System.out.println("== 아이템 판매 성공! +"+tmp.getPrice()+"금 획득!  >> 현재 소지금 : "+p1.getMoney());
+						System.out.println();
+						sf.itemDelete(tmp); // 아이템 삭제. CASCADE로 자동으로 인벤, 장비 정보도 삭제.
+					} 
+					catch (NumberFormatException e) 
+					{
+						System.out.println("== 제대로 고르세요...");
+						e.printStackTrace();
+					}
+				}
+				else
 				{
 					System.out.println("== 상인 : 벌써 가시게요..? 다음에 봅시다...");
 					System.out.println("== ");

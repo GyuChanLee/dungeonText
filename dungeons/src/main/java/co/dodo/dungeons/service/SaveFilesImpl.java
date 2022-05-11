@@ -622,6 +622,24 @@ public class SaveFilesImpl implements SaveFiles
 		return vo;
 	}
 	
+	public int itemDelete(ItemVO vo) // 특정한 한개의 아이템을 삭제. > 연결된 인벤토리 정보, 장비 정보도 삭제됨.
+	{
+		int n =0;
+		String sql ="DELETE ITEM WHERE ITEMID = ?";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setInt(1, vo.getItemId());
+			n = psmt.executeUpdate();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return n;
+	}
+	
 	private void close() // 커넥션 닫기 메서드
 	{
 		try 
