@@ -88,13 +88,13 @@ public class Mains
 				}
 				else
 				{
-					System.out.println("올바른 선택지를 고르세요...");
+					System.out.println("올바른 선택지를 고르세요... [err1]");
 					System.out.println();
 				}
 			}
 			catch(Exception e)
 			{
-				System.out.println("올바른 선택지를 고르세요...");
+				System.out.println("올바른 선택지를 고르세요...[err2]");
 				System.out.println();
 			}
 			

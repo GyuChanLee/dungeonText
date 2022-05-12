@@ -51,9 +51,10 @@ public class Game extends Thread // 게임 구현
 		bossLists.loadBossList();
 		unitLists.loadUnitList();
 		allCards = sf.CardListSelect(p1); // 유저가 가진 카드리스트 불러오기.
-		if(allCards.get(0) == null && p1.getProgress()==0)
+		if(allCards.isEmpty() && p1.getProgress()==0)
 		{
 			main.Card5(p1); // 죽어서 초기화되었을 때, 초기 5개 기본 카드 다시 증정.
+			allCards = sf.CardListSelect(p1);
 		}
 		// 플레이어가 착용하던 장비 불러오기 기능.
 		equipment = sf.equipLoad(p1);
@@ -836,7 +837,14 @@ public class Game extends Thread // 게임 구현
 					
 					if(allCards.get(enforce-1).getAttack()!=0) // 공격카드일 시, 강화
 					{
-						allCards.get(enforce-1).setAttack((int)(Math.round(allCards.get(enforce-1).getAttack()*1.25)));
+						if(allCards.get(enforce-1).getAttack() < 40)
+						{
+							allCards.get(enforce-1).setAttack(allCards.get(enforce-1).getAttack()+10);
+						}
+						else
+						{
+							allCards.get(enforce-1).setAttack((int)(Math.round(allCards.get(enforce-1).getAttack()*1.25)));
+						}
 						System.out.println("== 공격류 카드 강화 완료!  ==");
 						System.out.println();
 						System.out.println("강화 후 카드의 공격력 : "+allCards.get(enforce-1).getAttack());
@@ -845,7 +853,14 @@ public class Game extends Thread // 게임 구현
 					}
 					else
 					{
-						allCards.get(enforce-1).setDefense((int)Math.round((allCards.get(enforce-1).getDefense()*1.25)));
+						if(allCards.get(enforce-1).getDefense() < 40)
+						{
+							allCards.get(enforce-1).setDefense(allCards.get(enforce-1).getDefense()+10);
+						}
+						else
+						{
+							allCards.get(enforce-1).setDefense((int)Math.round((allCards.get(enforce-1).getDefense()*1.25)));
+						}
 						System.out.println("== 방어류 카드 강화 완료!  ==");
 						System.out.println();
 						System.out.println("강화 후 카드의 방어력 : "+allCards.get(enforce-1).getDefense());
