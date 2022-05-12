@@ -123,6 +123,10 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			close();
+		}
 		return n;
 	}
 
@@ -150,6 +154,10 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			close();
+		}
 		return n;
 	}
 
@@ -168,6 +176,10 @@ public class SaveFilesImpl implements SaveFiles
 		catch(SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			close();
 		}
 		return n;
 	}
@@ -192,6 +204,10 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			close();
+		}
 		return n;
 	}
 
@@ -212,6 +228,10 @@ public class SaveFilesImpl implements SaveFiles
 		catch(SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			close();
 		}
 		return n;
 	}
@@ -237,6 +257,10 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			close();
+		}
 		return n;
 	}
 	
@@ -261,6 +285,10 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			close();
+		}
 		return n;
 	}
 	
@@ -284,6 +312,10 @@ public class SaveFilesImpl implements SaveFiles
 		catch(SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			close();
 		}
 		return n;
 	}
@@ -377,6 +409,10 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			close();
+		}
 		return n;
 	}
 	
@@ -394,6 +430,10 @@ public class SaveFilesImpl implements SaveFiles
 		catch(SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			close();
 		}
 		return n;
 	}
@@ -519,6 +559,10 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			close();
+		}
 		return n;
 	}
 	
@@ -608,6 +652,10 @@ public class SaveFilesImpl implements SaveFiles
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			close();
+		}
 		return n;
 	}
 	
@@ -624,6 +672,10 @@ public class SaveFilesImpl implements SaveFiles
 		catch(SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			close();
 		}
 	}
 	
