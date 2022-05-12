@@ -4,7 +4,6 @@ import java.util.List;
 
 import co.dodo.dungeons.cards.CardVO;
 import co.dodo.dungeons.items.ItemVO;
-import co.dodo.dungeons.vo.InventoryVO;
 import co.dodo.dungeons.vo.PlayerVO;
 
 
@@ -21,7 +20,6 @@ public interface SaveFiles
 	ItemVO itemSelect(); // 최근에 넣은 아이템 하나 불러오기.
 	int inventoryInsert(ItemVO vo1,PlayerVO vo2); // 인벤토리에 넣기
 	int cardListInsert(CardVO vo1,PlayerVO vo2); // 카드리스트에 넣기
-	InventoryVO InventorySelect(PlayerVO vo); // 인벤토리 불러오기 해당 플레이어
 	List<CardVO> CardListSelect(PlayerVO vo); // 카드리스트 불러오기 
 	List<CardVO> Card5Select(); // 초기 5개 카드
 	int equipInsert(ItemVO vo1, PlayerVO vo2); // 플레이어 장비에 장비 넣기. (테이블에 넣기)
@@ -34,4 +32,5 @@ public interface SaveFiles
 	
 	CardVO recentCardSelect(); // 가장 바로 최근에 넣은 카드를 가져오기.
 	int itemDelete(ItemVO vo); // 아이템 한개 삭제 > 아이템 판매 기능.
+	void cardDelete(CardVO vo); // 카드 한개 삭제
 }

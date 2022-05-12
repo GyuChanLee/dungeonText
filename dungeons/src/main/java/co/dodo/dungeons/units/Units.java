@@ -15,6 +15,8 @@ public class Units
 	private String mAttack;
 	private String mAttack2;
 	private String mDefense;
+	private int savingHp = 0;
+	private int savinDef = 0;
 	
 	public Units(String name, int mobId ,int money, int attack, int defense, int hp, String mAppear, String mAttack,
 			String mAttack2, String mDefense) 
@@ -29,6 +31,8 @@ public class Units
 		this.mAttack = mAttack;
 		this.mAttack2 = mAttack2;
 		this.mDefense = mDefense;
+		savingHp = hp;
+		savinDef = defense;
 	}
 	
 	public int mobAttack() 
@@ -52,6 +56,8 @@ public class Units
 	{
 		System.out.println("== "+name+" 이/가 죽었습니다!");
 		System.out.println("== 보상 : "+this.getMoney()+"금을 얻었습니다! ");
+		setHp(savingHp);
+		setDefense(savinDef);
 		return this.getMoney();
 	}
 	

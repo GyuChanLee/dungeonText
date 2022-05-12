@@ -118,6 +118,8 @@ public class Mains
 				+ "╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝    ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝\r\n"
 				+ "                                                                                                                                                 \r\n"
 				+ "");
+		
+		
 		System.out.println("==== 1. 게임 새로시작     ====");
 		System.out.println("==== 2. 게임 불러오기     ====");
 		System.out.println("==== 3. 명예의 전당       ====");
@@ -136,18 +138,12 @@ public class Mains
 		PlayerVO p1 = new PlayerVO(userName,pw);
 		sf.playerInsert(p1);
 		p1 = sf.playerSelect(p1);
-		List<CardVO> allCards = new ArrayList<CardVO>();
-		allCards = generateCards();
 		
-		for(int i=0; i<allCards.size(); i++) // 초기 생성 5개 카드를 생성 캐릭터의 카드리스트에 넣기.
-		{
-			CardVO tmp = allCards.get(i);
-			sf.cardListInsert(tmp, p1);
-		}
+		Card5(p1);
 		
 	}
 	
-	private List<CardVO> generateCards() // 처음 카드리스트 생성
+	public List<CardVO> generateCards() // 처음 카드리스트 생성
 	{
 		List<CardVO> cardList = new ArrayList<CardVO>();
 		CardVO general1 = new CardAttack(); 
@@ -164,5 +160,16 @@ public class Mains
 		cardList = sf.Card5Select(); // 초기생성 5개 카드 뽑아옴.
 		
 		return cardList;
+	}
+	
+	public void Card5(PlayerVO p1)
+	{
+		List<CardVO> allCards = new ArrayList<CardVO>();
+		allCards = generateCards();
+		for(int i=0; i<allCards.size(); i++) // 초기 생성 5개 카드를 생성 캐릭터의 카드리스트에 넣기.
+		{
+			CardVO tmp = allCards.get(i);
+			sf.cardListInsert(tmp, p1);
+		}
 	}
 }

@@ -288,36 +288,6 @@ public class SaveFilesImpl implements SaveFiles
 		return n;
 	}
 	
-	@Override
-	public InventoryVO InventorySelect(PlayerVO vo) // 인벤토리 불러오기
-	{
-		String sql = "SELECT * FROM INVENTORY WHERE USERID = ?";
-		InventoryVO vo1 = null;
-		try
-		{
-			conn = dao.getConnection();
-			psmt = conn.prepareStatement(sql);
-			psmt.setInt(1, vo.getUserId()); // 숫자는  ?의 위치, 그 위치에 필요한 인수 넣기.
-			rs = psmt.executeQuery();
-			
-			if(rs.next())
-			{
-				vo1 = new InventoryVO();
-				vo1.setInvenId(rs.getInt("invenid"));
-				vo1.setItemId(rs.getInt("itemid"));
-				vo1.setUserId(rs.getInt("userid"));
-			}
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			close();
-		}
-		return vo1;
-	}
 	
 	@Override
 	public List<CardVO> CardListSelect(PlayerVO vo1) // 플레이어가 가진 카드리스트를 가져옴.
@@ -639,6 +609,22 @@ public class SaveFilesImpl implements SaveFiles
 			e.printStackTrace();
 		}
 		return n;
+	}
+	
+	public void cardDelete(CardVO vo)
+	{
+		String sql ="DELETE CARD WHERE CARDID = ?";
+		try
+		{
+			conn = dao.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setInt(1, vo.getCardId());
+			psmt.executeUpdate();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private void close() // 커넥션 닫기 메서드

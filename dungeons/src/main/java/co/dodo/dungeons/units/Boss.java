@@ -16,6 +16,8 @@ public class Boss
 	private String mBossAttack; // 보스강공 멘트
 	private String mBossUlt; // 궁극기 멘트
 	private String mBossDeath; // 사망 멘트
+	private int savingHp = 0;
+	private int savinDef = 0;
 	
 	
 	
@@ -34,6 +36,8 @@ public class Boss
 		this.mBossAttack = mBossAttack;
 		this.mBossUlt = mBossUlt;
 		this.mBossDeath = mBossDeath;
+		savingHp = hp;
+		savinDef = defense;
 	}
 
 	public int mobAttack() 
@@ -73,6 +77,8 @@ public class Boss
 	{
 		System.out.println(mBossDeath);
 		System.out.println("== 보상 : "+this.getMoney()+"금을 얻었습니다! ");
+		setHp(savingHp);
+		setDefense(savinDef);
 		return this.getMoney();
 	}
 	

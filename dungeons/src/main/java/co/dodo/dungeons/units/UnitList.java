@@ -116,6 +116,8 @@ public class UnitList
 	private Units pyromania1 = new Units("방화광",1,1000,100,0,100,pyromaniaAppear,pyromaniaAttack,pyromaniaAttack2, pyromaniaDefense);
 	private Units pyromania2 = new Units("방화광",2,1300,150,0,120,pyromaniaAppear,pyromaniaAttack,pyromaniaAttack2, pyromaniaDefense);
 	
+	// stage 4
+	
 	public void loadUnitList()
 	{
 		// stage1
@@ -140,7 +142,7 @@ public class UnitList
 		unitList.add(specter2);
 		unitList.add(warden1);
 		unitList.add(warden2);
-		//stage3
+		// stage3
 		unitList.add(fireElemental1);
 		unitList.add(fireElemental2);
 		unitList.add(flameDog1);
@@ -151,6 +153,7 @@ public class UnitList
 		unitList.add(pyromancer2);
 		unitList.add(pyromania1);
 		unitList.add(pyromania2);
+		// stage4
 	}
 	
 	public Units getUnit(String name, int mobId) // 유닛이름과 아이디로 검색해서 유닛 인스턴스 반환
