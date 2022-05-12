@@ -16,19 +16,9 @@ import co.dodo.dungeons.maps.Stages;
 import co.dodo.dungeons.service.SaveFiles;
 import co.dodo.dungeons.service.SaveFilesImpl;
 import co.dodo.dungeons.units.Boss;
-import co.dodo.dungeons.units.Boss1;
-import co.dodo.dungeons.units.Boss2;
-import co.dodo.dungeons.units.Goblin;
-import co.dodo.dungeons.units.LivingArmor;
-import co.dodo.dungeons.units.Oak;
-import co.dodo.dungeons.units.Skeleton;
-import co.dodo.dungeons.units.Slime;
-import co.dodo.dungeons.units.Specter;
+import co.dodo.dungeons.units.BossList;
+import co.dodo.dungeons.units.UnitList;
 import co.dodo.dungeons.units.Units;
-import co.dodo.dungeons.units.Vampire;
-import co.dodo.dungeons.units.Warden;
-import co.dodo.dungeons.units.Witch;
-import co.dodo.dungeons.units.Zombie;
 import co.dodo.dungeons.vo.PlayerVO;
 
 public class Game extends Thread // 게임 구현 
@@ -44,12 +34,16 @@ public class Game extends Thread // 게임 구현
 	private PlayerVO p1;
 	private List<CardVO> allCards;
 	private boolean no = true;
+	private BossList bossLists = new BossList();
+	private UnitList unitLists = new UnitList();
 
 	
 	private void game()
 	{
 		checkLogin();
 		items.makeAllItem();
+		bossLists.loadBossList();
+		unitLists.loadUnitList();
 		allCards = sf.CardListSelect(p1); // 유저가 가진 카드리스트 불러오기.
 		// 플레이어가 착용하던 장비 불러오기 기능.
 		equipment = sf.equipLoad(p1);
@@ -90,7 +84,36 @@ public class Game extends Thread // 게임 구현
 				{
 					map = new MapStage3();
 				}
-			}	
+			}
+			else // 모두 클리어
+			{
+				sleeps(1000);
+				System.out.println("== ");
+				System.out.println("== 모든 던전들을 탐험하셨습니다!");
+				System.out.println();
+				System.out.println();
+				System.out.println("██████╗ ██╗   ██╗███╗   ██╗ ██████╗ ███████╗ ██████╗ ███╗   ██╗     ██████╗██╗     ███████╗ █████╗ ██████╗ ██╗██╗\r\n"
+						+ "██╔══██╗██║   ██║████╗  ██║██╔════╝ ██╔════╝██╔═══██╗████╗  ██║    ██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗██║██║\r\n"
+						+ "██║  ██║██║   ██║██╔██╗ ██║██║  ███╗█████╗  ██║   ██║██╔██╗ ██║    ██║     ██║     █████╗  ███████║██████╔╝██║██║\r\n"
+						+ "██║  ██║██║   ██║██║╚██╗██║██║   ██║██╔══╝  ██║   ██║██║╚██╗██║    ██║     ██║     ██╔══╝  ██╔══██║██╔══██╗╚═╝╚═╝\r\n"
+						+ "██████╔╝╚██████╔╝██║ ╚████║╚██████╔╝███████╗╚██████╔╝██║ ╚████║    ╚██████╗███████╗███████╗██║  ██║██║  ██║██╗██╗\r\n"
+						+ "╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝     ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝\r\n"
+						+ "                                                                                                                 \r\n"
+						+ "");
+				sleeps(1000);
+				System.out.println();
+				System.out.println();
+				System.out.println("== 세이브파일을 저장하시겠습니까? 1 입력 > ");
+				int save = Integer.parseInt(scn.nextLine());
+				if(save == 1)
+				{
+					saveGame();
+					System.out.println("");
+					System.out.println("== 세이브 완료! ");
+					System.out.println("");
+				}
+				return;
+			}
 			
 			sleeps(500);
 			System.out.println("== 1. 들어가기.");
@@ -159,7 +182,7 @@ public class Game extends Thread // 게임 구현
 					}
 				}
 				
-				if(p1.getProgress()==10) // 스테이지 클리어 시, 완료메시지+자동저장기능 
+				if(p1.getProgress()==10) // 스테이지 클리어 시, 완료메시지
 				{
 					sleeps(500);
 					map.cong();
@@ -171,7 +194,19 @@ public class Game extends Thread // 게임 구현
 					System.out.println();
 					sleeps(1000);
 				}
-				if(p1.getProgress()==20)
+				else if(p1.getProgress()==20)
+				{
+					sleeps(500);
+					map.cong();
+					sleeps(500);
+					System.out.println();
+					p1.toString();
+					System.out.println();
+					System.out.println();
+					System.out.println();
+					sleeps(1000);
+				}
+				else if(p1.getProgress()==30)
 				{
 					sleeps(500);
 					map.cong();
@@ -245,12 +280,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=0 && p1.getProgress() <= 4) // 0-3층일 때 약하게 리젠
 				{
-					mobs = new Oak(100,15,5,30);
+					mobs = unitLists.getUnit("오크", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Oak(200,20,10,70);
+					mobs = unitLists.getUnit("오크", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -258,12 +295,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=0 && p1.getProgress() <= 4) 
 				{
-					mobs = new Goblin(200,15,0,30);
+					mobs = unitLists.getUnit("고블린", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Goblin(300,30,3,40);
+					mobs = unitLists.getUnit("고블린", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -271,12 +310,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=0 && p1.getProgress() <= 4) 
 				{
-					mobs = new LivingArmor(100,10,8,30);
+					mobs = unitLists.getUnit("걸어다니는 갑옷", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new LivingArmor(200,10,15,50);
+					mobs = unitLists.getUnit("걸어다니는 갑옷", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -284,12 +325,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=0 && p1.getProgress() <= 4) 
 				{
-					mobs = new Slime(100,15,5,30);
+					mobs = unitLists.getUnit("슬라임", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Slime(200,20,10,40);
+					mobs = unitLists.getUnit("슬라임", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -297,12 +340,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=0 && p1.getProgress() <= 4) 
 				{
-					mobs = new Vampire(150,25,5,50);
+					mobs = unitLists.getUnit("뱀파이어", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Vampire(300,35,5,50);
+					mobs = unitLists.getUnit("뱀파이어", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -314,12 +359,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new Skeleton(300,16,5,50);
+					mobs = unitLists.getUnit("해골", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Skeleton(400,22,10,80);
+					mobs = unitLists.getUnit("해골", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -327,12 +374,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new Zombie(300,18,0,30);
+					mobs = unitLists.getUnit("좀비", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Zombie(450,32,3,40);
+					mobs = unitLists.getUnit("좀비", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -340,12 +389,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new Witch(250,15,18,30);
+					mobs = unitLists.getUnit("마녀", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Witch(400,15,25,30);
+					mobs = unitLists.getUnit("마녀", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -353,12 +404,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new Specter(300,35,5,60);
+					mobs = unitLists.getUnit("유령", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Specter(500,40,10,90);
+					mobs = unitLists.getUnit("유령", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -366,12 +419,14 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
 				{
-					mobs = new Warden(150,35,5,90);
+					mobs = unitLists.getUnit("감옥 파수꾼", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Warden(300,40,5,110);
+					mobs = unitLists.getUnit("감옥 파수꾼", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -381,66 +436,76 @@ public class Game extends Thread // 게임 구현
 		{
 			if(randSel==0)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				if(p1.getProgress()>=20 && p1.getProgress() <= 24) 
 				{
-					mobs = new Skeleton(300,16,5,50);
+					mobs = unitLists.getUnit("불의 정령", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Skeleton(400,22,10,80);
+					mobs = unitLists.getUnit("불의 정령", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
 			else if(randSel==1)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				if(p1.getProgress()>=20 && p1.getProgress() <= 24) 
 				{
-					mobs = new Zombie(300,18,0,30);
+					mobs = unitLists.getUnit("화염 개", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Zombie(450,32,3,40);
+					mobs = unitLists.getUnit("화염 개", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
 			else if(randSel==2)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				if(p1.getProgress()>=20 && p1.getProgress() <= 24) 
 				{
-					mobs = new Witch(250,15,18,30);
+					mobs = unitLists.getUnit("불탄 하수인", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Witch(400,15,25,30);
+					mobs = unitLists.getUnit("불탄 하수인", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
 			else if(randSel==3)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				if(p1.getProgress()>=20 && p1.getProgress() <= 24) 
 				{
-					mobs = new Specter(300,35,5,60);
+					mobs = unitLists.getUnit("화염술사", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Specter(500,40,10,90);
+					mobs = unitLists.getUnit("화염술사", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
 			else if(randSel==4)
 			{
-				if(p1.getProgress()>=10 && p1.getProgress() <= 14) 
+				if(p1.getProgress()>=20 && p1.getProgress() <= 24) 
 				{
-					mobs = new Warden(150,35,5,90);
+					mobs = unitLists.getUnit("방화광", 1);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = new Warden(300,40,5,110);
+					mobs = unitLists.getUnit("방화광", 2);
+					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 			}
@@ -515,83 +580,90 @@ public class Game extends Thread // 게임 구현
 				System.out.println("== 아이템 사용 : 6번 > ");
 				System.out.println("== 현재 행동력 : "+ p1Action);
 				System.out.println("== ");
-				int select = Integer.parseInt(scn.nextLine());
-				CardVO selectCard = null;
-				if(select!=6)
+				try 
 				{
-					selectCard = selectCard5.get(select-1);
-				}
-				if(select==6) // 전투용 아이템 사용. 일회용 아님.
-				{
-					while(true)
+					int select = Integer.parseInt(scn.nextLine());
+					CardVO selectCard = null;
+					if(select!=6)
 					{
-						showInvenFight();  // 웨 안나옴???
-						System.out.println();
-						System.out.println("== 쓰고싶은 아이템의 이름을 적으세요 > ");
-						System.out.println("== 뒤로가기 : \"back\" 입력 > ");
-						String itemSelect = scn.nextLine();
-						boolean yes = false;
-						for(int i=0; i<inventory.size();i++)
+						selectCard = selectCard5.get(select-1);
+					}
+					if(select==6) // 전투용 아이템 사용. 일회용 아님.
+					{
+						while(true)
 						{
-							if(itemSelect.equals(inventory.get(i).getItemName()))
+							showInvenFight();
+							System.out.println();
+							System.out.println("== 쓰고싶은 아이템의 이름을 적으세요 > ");
+							System.out.println("== 뒤로가기 : \"back\" 입력 > ");
+							String itemSelect = scn.nextLine();
+							boolean yes = false;
+							for(int i=0; i<inventory.size();i++)
 							{
-								System.out.println("== "+inventory.get(i).getItemName()+"을 선택");  // 아이템아이디로 구분하기. > 이름 중복문제 해결
-								System.out.println("== "+inventory.get(i).getReadme());
-								if(inventory.get(i).getInstantDamage()>0)
+								if(itemSelect.equals(inventory.get(i).getItemName()))
 								{
-									instanceDamage = inventory.get(i).getInstantDamage();
+									System.out.println("== "+inventory.get(i).getItemName()+"을 선택");  // 아이템아이디로 구분하기. > 이름 중복문제 해결
+									System.out.println("== "+inventory.get(i).getReadme());
+									if(inventory.get(i).getInstantDamage()>0)
+									{
+										instanceDamage = inventory.get(i).getInstantDamage();
+									}
+									else if(inventory.get(i).getInstantDamage()<0)
+									{
+										heal = -inventory.get(i).getInstantDamage();
+									}
+									yes = true;
 								}
-								else if(inventory.get(i).getInstantDamage()<0)
-								{
-									heal = -inventory.get(i).getInstantDamage();
-								}
-								yes = true;
+							}
+							if(itemSelect.equals("back"))
+							{
+								break;
+							}
+							
+							if(yes==false)
+							{
+								System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
+							}
+							else
+							{
+								break;
 							}
 						}
-						if(itemSelect.equals("back"))
-						{
-							break;
-						}
-						
-						if(yes==false)
-						{
-							System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
-						}
-						else
-						{
-							break;
-						}
-					}
-				}
-				else
-				{
-					if(p1Action >= selectCard.getActionConsumption())
-					{
-						sleeps(500);
-						System.out.println();
-						System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
-						System.out.println("== "+selectCard.getReadme());
-						System.out.println();
-						sleeps(500);
-						p1Att = selectCard.getAttack();
-						allAtt += p1Att;
-						p1Def = selectCard.getDefense();
-						allDef += p1Def;
-						
-						if(selectCard.getAttack()!=0)
-						{
-							attackCount++;
-						}
-						p1Action -= selectCard.getActionConsumption();
-						selectCard5.remove(selectCard);
 					}
 					else
 					{
-						sleeps(500);
-						System.out.println("== 행동력이 부족합니다...");
-						System.out.println();
-						sleeps(500);
+						if(p1Action >= selectCard.getActionConsumption())
+						{
+							sleeps(500);
+							System.out.println();
+							System.out.println("== "+selectCard.getCardName()+" 카드 선택 ");
+							System.out.println("== "+selectCard.getReadme());
+							System.out.println();
+							sleeps(500);
+							p1Att = selectCard.getAttack();
+							allAtt += p1Att;
+							p1Def = selectCard.getDefense();
+							allDef += p1Def;
+							
+							if(selectCard.getAttack()!=0)
+							{
+								attackCount++;
+							}
+							p1Action -= selectCard.getActionConsumption();
+							selectCard5.remove(selectCard);
+						}
+						else
+						{
+							sleeps(500);
+							System.out.println("== 행동력이 부족합니다...");
+							System.out.println();
+							sleeps(500);
+						}
 					}
+				} 
+				catch (Exception e) 
+				{
+					System.out.println("== 올바른 선택지를 고르세요...");
 				}
 			}
 			
@@ -672,7 +744,7 @@ public class Game extends Thread // 게임 구현
 	private int stairs()
 	{
 		int pause = 0;
-		int reinforce = 1;
+		int reinforce = 2;
 		while(true)
 		{
 			if((p1.getProgress()+1)%10==0)
@@ -698,7 +770,7 @@ public class Game extends Thread // 게임 구현
 				{
 					break;
 				}
-				else if(select == 2 && reinforce == 1)
+				else if(select == 2 && reinforce != 0)
 				{
 					System.out.println("====  강  화  ====");
 					System.out.println();
@@ -706,17 +778,19 @@ public class Game extends Thread // 게임 구현
 					System.out.println("== 소지중인 카드 목록 >");
 					for(int i=0; i<allCards.size(); i++) //전체 소지카드 보여주기
 					{
-						sleeps(500);
+						sleeps(100);
 						System.out.println((i+1)+"번 : "+allCards.get(i).toString());
 					}
+					sleeps(1000);
 					System.out.println();
+					System.out.println("== 강화는 한 층당 두 번 가능합니다");
 					System.out.println("== 강화할 카드");
 					int enforce = Integer.parseInt(scn.nextLine());
 					sleeps(500);
 					
 					if(allCards.get(enforce-1).getAttack()!=0) // 공격카드일 시, 강화
 					{
-						allCards.get(enforce-1).setAttack((allCards.get(enforce-1).getAttack()+5));
+						allCards.get(enforce-1).setAttack((int)(Math.round(allCards.get(enforce-1).getAttack()*1.5)));
 						System.out.println("== 공격류 카드 강화 완료!  ==");
 						System.out.println();
 						System.out.println("강화 후 카드의 공격력 : "+allCards.get(enforce-1).getAttack());
@@ -725,7 +799,7 @@ public class Game extends Thread // 게임 구현
 					}
 					else
 					{
-						allCards.get(enforce-1).setDefense((allCards.get(enforce-1).getDefense()+5));
+						allCards.get(enforce-1).setDefense((int)Math.round((allCards.get(enforce-1).getDefense()*1.5)));
 						System.out.println("== 방어류 카드 강화 완료!  ==");
 						System.out.println();
 						System.out.println("강화 후 카드의 방어력 : "+allCards.get(enforce-1).getDefense());
@@ -752,10 +826,10 @@ public class Game extends Thread // 게임 구현
 					pause = 1; // 1일시 게임 나가도록 설정.
 					return pause;
 				}
-				else if(reinforce!=1)
+				else if(reinforce== 0)
 				{
 					System.out.println();
-					System.out.println("== 이미 강화를 한번 하셨습니다...");
+					System.out.println("== 이미 강화를 모두 하셨습니다...");
 					System.out.println();
 				}
 				else
@@ -780,19 +854,22 @@ public class Game extends Thread // 게임 구현
 		// 몹 생성
 		if(p1.getProgress()==9)
 		{
-			Boss boss = new Boss1(1000, 40, 20, 150);
+			Boss boss = bossLists.getBoss("성의 주인");
+			System.out.println(boss.getMAppear());
 			System.out.println();
 			fightBoss(p1,boss);
 		}
 		else if(p1.getProgress()==19)
 		{
-			Boss boss = new Boss2(2000, 50, 10, 200);
+			Boss boss = bossLists.getBoss("감옥탑의 괴물");
+			System.out.println(boss.getMAppear());
 			System.out.println();
 			fightBoss(p1,boss);
 		}
 		else if(p1.getProgress()==29) // boss3 구현하기
 		{
-			Boss boss = new Boss2(2000, 50, 10, 200);
+			Boss boss = bossLists.getBoss("라그나로스");
+			System.out.println(boss.getMAppear());
 			System.out.println();
 			fightBoss(p1,boss);
 		}
