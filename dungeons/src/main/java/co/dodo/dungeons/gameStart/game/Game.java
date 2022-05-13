@@ -734,6 +734,7 @@ public class Game extends Thread // 게임 구현
 								{
 									System.out.println("== "+inventory.get(i).getItemName()+"을 선택");  // 일치하는 이름 중 제일 먼저 찾아지는 것부터 사용.
 									System.out.println("== "+inventory.get(i).getReadme());
+									System.out.println();
 									if(inventory.get(i).getInstantDamage()>0)
 									{
 										instanceDamage += inventory.get(i).getInstantDamage();
@@ -1156,6 +1157,7 @@ public class Game extends Thread // 게임 구현
 							{
 								System.out.println("== "+inventory.get(i).getItemName()+"을 선택");  // 일치하는 이름 중 제일 먼저 찾아지는 것부터 사용.
 								System.out.println("== "+inventory.get(i).getReadme());
+								System.out.println();
 								if(inventory.get(i).getInstantDamage()>0)
 								{
 									instanceDamage += inventory.get(i).getInstantDamage();
