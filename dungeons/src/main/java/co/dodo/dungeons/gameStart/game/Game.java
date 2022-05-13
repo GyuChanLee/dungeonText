@@ -1700,6 +1700,12 @@ public class Game extends Thread // 게임 구현
 				showInven();
 				System.out.println("== 대신 착용할 무기를 입력 ( 취소 : 0번 ) > ");
 				int changeNew = Integer.parseInt(scn.nextLine());
+				
+				if(changeNew==0)
+				{
+					return;
+				}
+				
 				ItemVO chageItem = inventory.get(changeNew-1);
 				if(chageItem.getAttack()==0)
 				{
@@ -1722,6 +1728,12 @@ public class Game extends Thread // 게임 구현
 				showInven();
 				System.out.println("== 대신 착용할 방어구를 입력 ( 취소 : 0번 ) > ");
 				int changeNew = Integer.parseInt(scn.nextLine());
+				
+				if(changeNew==0)
+				{
+					return;
+				}
+				
 				ItemVO chageItem = inventory.get(changeNew-1);
 				if(chageItem.getDefense()==0)
 				{

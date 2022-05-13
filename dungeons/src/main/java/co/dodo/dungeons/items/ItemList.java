@@ -21,12 +21,12 @@ public class ItemList
 	private ItemVO molotov = new ItemVO("화염병", 0, 0, 20, "== 화염병을 던집니다 [ damage +20 ] ", 300);
 	// 중반 아이템
 	private ItemVO sword4 = new ItemVO("귀철", 20, 0, 0, "== 주인을 배신한다는 소문난 마검. [ attack +20 ] ", 1000);
-	private ItemVO sword5 = new ItemVO("청룡언월도", 25, 0, 0, "== 강호의 고수가 썼다고 알려진 도. [ attack +5 ] ", 2000);
-	private ItemVO sword6 = new ItemVO("전설의 곡괭이", 35, 0, 0, "== 전설의 곡괭이. [ attack +5 ] ", 3000);
-	private ItemVO shield4 = new ItemVO("양은 냄비 뚜껑", 0, 15, 0, "== 라면 먹기에 최적화. [ defense +5 ] ", 1000);
-	private ItemVO shield5 = new ItemVO("다이아몬드 방패", 0, 20, 0, "== 깨지지 않는 다이아몬드 방패. [ defense +5 ] ", 2000);
-	private ItemVO shield6 = new ItemVO("자기장 방패막", 0, 30, 0, "== 당신을 지켜줄 자기장이 나타납니다. [ defense +5 ] ", 3000);
-	private ItemVO restorative2 = new ItemVO("자가치료머신", 0, 0, -50, "== 상처를 치료해주는 자가치료 기계를 사용합니다 [ heal +100 ] ", 700);
+	private ItemVO sword5 = new ItemVO("청룡언월도", 25, 0, 0, "== 강호의 고수가 썼다고 알려진 도. [ attack +25 ] ", 2000);
+	private ItemVO sword6 = new ItemVO("전설의 곡괭이", 35, 0, 0, "== 전설의 곡괭이. [ attack +35 ] ", 3000);
+	private ItemVO shield4 = new ItemVO("양은 냄비 뚜껑", 0, 15, 0, "== 라면 먹기에 최적화. [ defense +15 ] ", 1000);
+	private ItemVO shield5 = new ItemVO("다이아몬드 방패", 0, 20, 0, "== 깨지지 않는 다이아몬드 방패. [ defense +20 ] ", 2000);
+	private ItemVO shield6 = new ItemVO("자기장 방패막", 0, 30, 0, "== 당신을 지켜줄 자기장이 나타납니다. [ defense +30 ] ", 3000);
+	private ItemVO restorative2 = new ItemVO("자가치료머신", 0, 0, -100, "== 상처를 치료해주는 자가치료 기계를 사용합니다 [ heal +100 ] ", 700);
 	private ItemVO grenade = new ItemVO("수류탄", 0, 0, 60, "== 수류탄을 던집니다 [ damage +60 ] ", 800);
 	
 	public void makeAllItem() // 게임 시작 시, 모든 아이템을 로딩.
