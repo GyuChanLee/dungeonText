@@ -12,6 +12,7 @@ import co.dodo.dungeons.items.ItemVO;
 import co.dodo.dungeons.maps.MapStage1;
 import co.dodo.dungeons.maps.MapStage2;
 import co.dodo.dungeons.maps.MapStage3;
+import co.dodo.dungeons.maps.MapStage4;
 import co.dodo.dungeons.maps.Maps;
 import co.dodo.dungeons.maps.Stages;
 import co.dodo.dungeons.service.SaveFiles;
@@ -92,6 +93,15 @@ public class Game extends Thread // 게임 구현
 					map = new MapStage3();
 				}
 			}
+			else if(p1.getProgress()>=30 && p1.getProgress()<40)
+			{
+				sleeps(1000);
+				stage.stage4();
+				if(map==null)
+				{
+					map = new MapStage4();
+				}
+			}
 			else // 모두 클리어
 			{
 				sleeps(1000);
@@ -110,7 +120,8 @@ public class Game extends Thread // 게임 구현
 				sleeps(1000);
 				System.out.println();
 				System.out.println();
-				System.out.println("== 세이브파일을 저장하시겠습니까? 1 입력 > ");
+				System.out.println("== 세이브파일을 저장하시겠습니까? ");
+				System.out.println("== 1. 세이브  |  2. 나가기 >");
 				int save = Integer.parseInt(scn.nextLine());
 				if(save == 1)
 				{
@@ -371,8 +382,7 @@ public class Game extends Thread // 게임 구현
 				}
 			}
 		}
-		
-		if(p1.getProgress()>=10 && p1.getProgress()<20) // 진행상황이 stage2일 시.
+		else if(p1.getProgress()>=10 && p1.getProgress()<20) // 진행상황이 stage2일 시.
 		{
 			if(randSel==0)
 			{
@@ -450,8 +460,7 @@ public class Game extends Thread // 게임 구현
 				}
 			}
 		}
-		
-		if(p1.getProgress()>=20 && p1.getProgress()<30) // 진행상황이 stage3일 시.  5/11 아직 stage 몹/보스 안만듬
+		else if(p1.getProgress()>=20 && p1.getProgress()<30) // 진행상황이 stage3일 시
 		{
 			if(randSel==0)
 			{
@@ -516,6 +525,84 @@ public class Game extends Thread // 게임 구현
 			else if(randSel==4)
 			{
 				if(p1.getProgress()>=20 && p1.getProgress() <= 24) 
+				{
+					mobs = unitLists.getUnit("방화광", 1);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+				else
+				{
+					mobs = unitLists.getUnit("방화광", 2);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+			}
+		}
+		else if(p1.getProgress()>=30 && p1.getProgress()<40) // stage4.
+		{
+			if(randSel==0)
+			{
+				if(p1.getProgress()>=30 && p1.getProgress() <= 34) 
+				{
+					mobs = unitLists.getUnit("메두사", 1);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+				else
+				{
+					mobs = unitLists.getUnit("메두사", 2);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+			}
+			else if(randSel==1)
+			{
+				if(p1.getProgress()>=30 && p1.getProgress() <= 34) 
+				{
+					mobs = unitLists.getUnit("화염 개", 1);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+				else
+				{
+					mobs = unitLists.getUnit("화염 개", 2);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+			}
+			else if(randSel==2)
+			{
+				if(p1.getProgress()>=30 && p1.getProgress() <= 34) 
+				{
+					mobs = unitLists.getUnit("불탄 하수인", 1);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+				else
+				{
+					mobs = unitLists.getUnit("불탄 하수인", 2);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+			}
+			else if(randSel==3)
+			{
+				if(p1.getProgress()>=30 && p1.getProgress() <= 34) 
+				{
+					mobs = unitLists.getUnit("화염술사", 1);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+				else
+				{
+					mobs = unitLists.getUnit("화염술사", 2);
+					System.out.println(mobs.getMAppear());
+					return mobs;
+				}
+			}
+			else if(randSel==4)
+			{
+				if(p1.getProgress()>=30 && p1.getProgress() <= 34) 
 				{
 					mobs = unitLists.getUnit("방화광", 1);
 					System.out.println(mobs.getMAppear());
@@ -791,7 +878,7 @@ public class Game extends Thread // 게임 구현
 	private int stairs()
 	{
 		int pause = 0;
-		int reinforce = 2;
+		int reinforce = 1;
 		while(true)
 		{
 			if((p1.getProgress()+1)%10==0)
@@ -830,7 +917,7 @@ public class Game extends Thread // 게임 구현
 					}
 					sleeps(1000);
 					System.out.println();
-					System.out.println("== 강화는 한 층당 두 번 가능합니다");
+					System.out.println("== 강화는 한 층당 한 번 가능합니다");
 					System.out.println("== 강화할 카드");
 					int enforce = Integer.parseInt(scn.nextLine());
 					sleeps(500);
@@ -934,6 +1021,13 @@ public class Game extends Thread // 게임 구현
 			System.out.println();
 			fightBoss(p1,boss);
 		}
+		else if(p1.getProgress()==29) // boss4
+		{
+			Boss boss = bossLists.getBoss("드라큘라");
+			System.out.println(boss.getMAppear());
+			System.out.println();
+			fightBoss(p1,boss);
+		}
 		
 		p1.setProgress(p1.getProgress()+1);
 	}
@@ -992,7 +1086,7 @@ public class Game extends Thread // 게임 구현
 				int j = 1;
 				for(CardVO card : selectCard5) // 카드 5개를 보여줌.
 				{
-					sleeps(500);
+					sleeps(100);
 					System.out.print(j+"번째 카드 : ");
 					System.out.println(card.toString());
 					j++;
@@ -1200,7 +1294,7 @@ public class Game extends Thread // 게임 구현
 		System.out.println();
 		System.out.println();
 		sleeps(1000);
-		int rand = (int)(Math.random()*1); // 3가지 경우의 수
+		int rand = (int)(Math.random()*3); // 3가지 경우의 수
 		
 		if(rand==0)
 		{
@@ -1372,6 +1466,9 @@ public class Game extends Thread // 게임 구현
 						System.out.println("== 아이템 판매 성공! +"+tmp.getPrice()+"금 획득!  >> 현재 소지금 : "+p1.getMoney());
 						System.out.println();
 						sf.itemDelete(tmp); // 아이템 삭제. CASCADE로 자동으로 인벤, 장비 정보도 삭제.
+						equipment[0] = null; // 장비중인 아이템을 판매한 경우 > 장비아이템 빼기.
+						equipment[1] = null;
+						equipment = sf.equipLoad(p1); // 장비 상태 리로드 > 장비 중인 아이템을 판매했다면 장비칸에서 빠짐.
 					} 
 					catch (Exception e) 
 					{
@@ -1677,7 +1774,15 @@ public class Game extends Thread // 게임 구현
 	
 	private void dropItems()
 	{
-		ItemVO dropItem = items.randomItem();
+		ItemVO dropItem = null;
+		if(p1.getProgress() < 20)
+		{
+			dropItem = items.randomItem();
+		}
+		else if(p1.getProgress() >= 20) // 진행상황 stage3일 때, 중반 아이템 드랍
+		{
+			dropItem = items.randomItem2();
+		}
 		System.out.println("== 아이템를 얻었습니다...");
 		System.out.println("== 얻은 아이템 정보 : "+dropItem.getItemName()+" "+dropItem.getReadme());
 		
@@ -1704,7 +1809,15 @@ public class Game extends Thread // 게임 구현
 	
 	private void dropItemsSpeical()
 	{
-		ItemVO dropItem = items.randomItemSpecial();
+		ItemVO dropItem = null;
+		if(p1.getProgress() < 20)
+		{
+			dropItem = items.randomItemSpecial();
+		}
+		else if(p1.getProgress() >= 20) // 진행상황 stage3일 때, 중반 아이템 드랍
+		{
+			dropItem = items.randomItemSpecial2();
+		}
 		System.out.println("== 아이템를 얻었습니다...");
 		sleeps(500);
 		System.out.println("== 얻은 아이템 정보 : "+dropItem.getItemName()+"  "+dropItem.getReadme());

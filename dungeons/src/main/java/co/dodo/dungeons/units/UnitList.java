@@ -117,6 +117,12 @@ public class UnitList
 	private Units pyromania2 = new Units("방화광",2,1300,150,0,120,pyromaniaAppear,pyromaniaAttack,pyromaniaAttack2, pyromaniaDefense);
 	
 	// stage 4
+	private String medusaAppear = "방화에 미친 방화광을 조우하였습니다! ";
+	private String medusaAttack = "== 방화광은 뜨거운 화염 폭탄을 당신에게 던집니다...";
+	private String medusaAttack2 = "화염폭발";
+	private String medusaDefense = "== 방화광은 스스로 몸을 지지며 의지를 다집니다...";
+	private Units medusa1 = new Units("메두사",1,1000,50,30,130,medusaAppear,medusaAttack,medusaAttack2, medusaDefense);
+	private Units medusa2 = new Units("메두사",2,1500,60,50,190,medusaAppear,medusaAttack,medusaAttack2, medusaDefense);
 	
 	public void loadUnitList()
 	{
@@ -154,6 +160,8 @@ public class UnitList
 		unitList.add(pyromania1);
 		unitList.add(pyromania2);
 		// stage4
+		unitList.add(medusa1);
+		unitList.add(medusa2);
 	}
 	
 	public Units getUnit(String name, int mobId) // 유닛이름과 아이디로 검색해서 유닛 인스턴스 반환

@@ -32,11 +32,20 @@ public class BossList
 	private String boss3M6 = "== 라그나로스를 굴복시켰습니다!";
 	private Boss boss3 = new Boss("라그나로스",4000, 80, 30, 300,boss3M1,boss3M2,boss3M3,boss3M4,boss3M5,boss3M6);
 	
+	private String boss4M1 = "악마성의 지배자, 드라큘라가 나타났습니다...";
+	private String boss4M2 = "== 드라큘라는 빠르게 날아들어 당신을 찢어발깁니다...";
+	private String boss4M3 = "== 드라큘라는 자신의 몸을 단단하게 변화시킵니다...";
+	private String boss4M4 = "== 드라큘라는 박쥐떼를 소환해 당신을 물어 뜯습니다...";
+	private String boss4M5 = "== <궁극기 주의> 드라큘라는 당신의 목을 물어 피를 뽑아냅니다...";
+	private String boss4M6 = "== 드라큘라를 사냥했습니다!";
+	private Boss boss4 = new Boss("드라큘라",7000, 100, 100, 500,boss4M1,boss4M2,boss4M3,boss4M4,boss4M5,boss4M6);
+	
 	public void loadBossList()
 	{
 		bossList.add(boss1);
 		bossList.add(boss2);
 		bossList.add(boss3);
+		bossList.add(boss4);
 	}
 	
 	public Boss getBoss(String name) // 보스이름으로 검색해서 보스 인스턴스 반환
