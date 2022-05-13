@@ -1182,11 +1182,11 @@ public class Game extends Thread // 게임 구현
 					System.out.println();
 					sleeps(500);
 					p1Att = selectCard.getAttack();
-					allAtt += (p1Att+p1.getAttack());
 					p1Def = selectCard.getDefense();
 					allDef += p1Def;
 					if(selectCard.getAttack()!=0)
 					{
+						allAtt += (p1Att+p1.getAttack());
 						attackCount++;
 					}
 				}
