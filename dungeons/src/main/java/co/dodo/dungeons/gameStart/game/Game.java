@@ -727,6 +727,7 @@ public class Game extends Thread // 게임 구현
 							System.out.println("== 쓰고싶은 아이템의 이름을 적으세요 > ");
 							System.out.println("== 뒤로가기 : \"back\" 입력 > ");
 							String itemSelect = scn.nextLine();
+							boolean yes = false;
 							for(int i=0; i<inventory.size();i++)
 							{
 								if(itemSelect.equals(inventory.get(i).getItemName()))
@@ -738,6 +739,7 @@ public class Game extends Thread // 게임 구현
 										instanceDamage += inventory.get(i).getInstantDamage();
 										sf.itemDelete(inventory.get(i));
 										sf.showInven(p1);
+										yes = true;
 										break;
 									}
 									else if(inventory.get(i).getInstantDamage()<0)
@@ -745,6 +747,7 @@ public class Game extends Thread // 게임 구현
 										heal += -inventory.get(i).getInstantDamage();
 										sf.itemDelete(inventory.get(i));
 										sf.showInven(p1);
+										yes = true;
 										break;
 									}
 									// 사용한 아이템 삭제 > 삭제 후 인벤토리 갱신.
@@ -754,7 +757,10 @@ public class Game extends Thread // 게임 구현
 							{
 								break;
 							}
-							System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
+							if(yes==false)
+							{
+								System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
+							}
 						}
 					}
 					else
@@ -1143,6 +1149,7 @@ public class Game extends Thread // 게임 구현
 						System.out.println("== 쓰고싶은 아이템의 이름을 적으세요 > ");
 						System.out.println("== 뒤로가기 : \"back\" 입력 > ");
 						String itemSelect = scn.nextLine();
+						boolean yes = false;
 						for(int i=0; i<inventory.size();i++)
 						{
 							if(itemSelect.equals(inventory.get(i).getItemName()))
@@ -1154,6 +1161,7 @@ public class Game extends Thread // 게임 구현
 									instanceDamage += inventory.get(i).getInstantDamage();
 									sf.itemDelete(inventory.get(i));
 									sf.showInven(p1);
+									yes = true;
 									break;
 								}
 								else if(inventory.get(i).getInstantDamage()<0)
@@ -1161,6 +1169,7 @@ public class Game extends Thread // 게임 구현
 									heal += -inventory.get(i).getInstantDamage();
 									sf.itemDelete(inventory.get(i));
 									sf.showInven(p1);
+									yes = true;
 									break;
 								}
 								// 사용한 아이템 삭제 > 삭제 후 인벤토리 갱신.
@@ -1170,7 +1179,10 @@ public class Game extends Thread // 게임 구현
 						{
 							break;
 						}
-						System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
+						if(yes==false)
+						{
+							System.out.println("== 그런 이름의 아이템을 찾을 수 없습니다...");
+						}
 					}
 				}
 				else if(p1Action!=0)
