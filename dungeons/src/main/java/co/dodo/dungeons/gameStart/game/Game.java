@@ -641,7 +641,7 @@ public class Game extends Thread // 게임 구현
 		{
 			int p1Att = 0;
 			int p1Def = 0;
-			int allAtt = p1.getAttack();
+			int allAtt = 0;
 			int allDef = p1.getDefense();
 			int heal = 0;
 			int instanceDamage = 0;
@@ -768,7 +768,7 @@ public class Game extends Thread // 게임 구현
 							System.out.println();
 							sleeps(500);
 							p1Att = selectCard.getAttack();
-							allAtt += p1Att;
+							allAtt += (p1Att+p1.getAttack());
 							p1Def = selectCard.getDefense();
 							allDef += p1Def;
 							
@@ -1060,7 +1060,7 @@ public class Game extends Thread // 게임 구현
 		{
 			int p1Att = 0;
 			int p1Def = 0;
-			int allAtt = p1.getAttack();
+			int allAtt = 0;
 			int allDef = p1.getDefense();
 			int p1Action = p1.getAction();
 			int heal = 0;
@@ -1182,7 +1182,7 @@ public class Game extends Thread // 게임 구현
 					System.out.println();
 					sleeps(500);
 					p1Att = selectCard.getAttack();
-					allAtt += p1Att;
+					allAtt += (p1Att+p1.getAttack());
 					p1Def = selectCard.getDefense();
 					allDef += p1Def;
 					if(selectCard.getAttack()!=0)
