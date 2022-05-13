@@ -122,14 +122,19 @@ public class Game extends Thread // 게임 구현
 				System.out.println();
 				System.out.println("== 세이브파일을 저장하시겠습니까? ");
 				System.out.println("== 1. 세이브  |  2. 나가기 >");
-				int save = Integer.parseInt(scn.nextLine());
-				if(save == 1)
+				try
 				{
-					saveGame();
-					System.out.println("");
-					System.out.println("== 세이브 완료! ");
-					System.out.println("");
-				}
+					int save = Integer.parseInt(scn.nextLine());
+					if(save == 1)
+					{
+						saveGame();
+						System.out.println("");
+						System.out.println("== 세이브 완료! ");
+						System.out.println("");
+					}
+				} 
+				catch (Exception e) 
+				{}
 				return;
 			}
 			
@@ -559,13 +564,13 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=30 && p1.getProgress() <= 34) 
 				{
-					mobs = unitLists.getUnit("화염 개", 1);
+					mobs = unitLists.getUnit("리자드맨", 1);
 					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = unitLists.getUnit("화염 개", 2);
+					mobs = unitLists.getUnit("리자드맨", 2);
 					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
@@ -574,13 +579,13 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=30 && p1.getProgress() <= 34) 
 				{
-					mobs = unitLists.getUnit("불탄 하수인", 1);
+					mobs = unitLists.getUnit("괴물 박쥐", 1);
 					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = unitLists.getUnit("불탄 하수인", 2);
+					mobs = unitLists.getUnit("괴물 박쥐", 2);
 					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
@@ -589,13 +594,13 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=30 && p1.getProgress() <= 34) 
 				{
-					mobs = unitLists.getUnit("화염술사", 1);
+					mobs = unitLists.getUnit("임프", 1);
 					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = unitLists.getUnit("화염술사", 2);
+					mobs = unitLists.getUnit("임프", 2);
 					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
@@ -604,13 +609,13 @@ public class Game extends Thread // 게임 구현
 			{
 				if(p1.getProgress()>=30 && p1.getProgress() <= 34) 
 				{
-					mobs = unitLists.getUnit("방화광", 1);
+					mobs = unitLists.getUnit("저주받은 검", 1);
 					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
 				else
 				{
-					mobs = unitLists.getUnit("방화광", 2);
+					mobs = unitLists.getUnit("저주받은 검", 2);
 					System.out.println(mobs.getMAppear());
 					return mobs;
 				}
@@ -630,6 +635,7 @@ public class Game extends Thread // 게임 구현
 		int mobDef = mob.getDefense();
 		int p1Hp = p1.getHp();
 		int p1Action = p1.getAction();
+		int turn = 1;
 		
 		while(t)
 		{
@@ -650,7 +656,9 @@ public class Game extends Thread // 게임 구현
 			
 			sleeps(2000);
 			
+			System.out.println("== "+turn+"번째 턴 =====================================================================================================================================");
 			System.out.println("== 당신의 차례 ==");
+			System.out.println();
 			
 			List<CardVO> selectCard5 = new ArrayList<CardVO>(); // 전체 소지카드 중에서 5개를 랜덤으로 추출해낸 리스트.
 			for(int i=0; i<5; i++)
@@ -694,6 +702,7 @@ public class Game extends Thread // 게임 구현
 					if(select==0)
 					{
 						System.out.println("== 턴을 종료합니다...");
+						System.out.println();
 						p1Action = 0;
 					}
 					else if(select!=6)
@@ -807,7 +816,9 @@ public class Game extends Thread // 게임 구현
 				System.out.println();
 				sleeps(1000);
 				
-				System.out.println("== "+mob.getName()+"의 차례 ==");
+				System.out.println();
+				System.out.println();
+				System.out.println("== "+mob.getName()+"의 차례 =====================================");
 				System.out.println();
 				// 랜덤하게 행동 결정
 				int rand1 = (int)(Math.random()*2);
@@ -854,10 +865,12 @@ public class Game extends Thread // 게임 구현
 				System.out.println("== Game Over == ");
 				return;
 			}
+			turn++; // 전투중 소모한 턴수 더하기.
 		}
 		System.out.println();
 		System.out.println();
-		System.out.println("== 전투 종료 ==");
+		System.out.println("== 전투 종료 =====================================================================================================================================");
+		System.out.println();
 		sleeps(1000);
 		p1.toString();
 		sleeps(1000);
@@ -1021,7 +1034,7 @@ public class Game extends Thread // 게임 구현
 			System.out.println();
 			fightBoss(p1,boss);
 		}
-		else if(p1.getProgress()==29) // boss4
+		else if(p1.getProgress()==39) // boss4
 		{
 			Boss boss = bossLists.getBoss("드라큘라");
 			System.out.println(boss.getMAppear());
@@ -1041,6 +1054,7 @@ public class Game extends Thread // 게임 구현
 		int mobHp = boss.getHp();
 		int mobDef = boss.getDefense();
 		int p1Hp = p1.getHp();
+		int turn = 1;
 		
 		while(t)
 		{
@@ -1061,7 +1075,7 @@ public class Game extends Thread // 게임 구현
 			p1.toString();
 			
 			sleeps(2000);
-			
+			System.out.println("== "+turn+"번째 턴 =====================================================================================================================================");
 			System.out.println("== 당신의 차례 ==");
 			
 			List<CardVO> selectCard5 = new ArrayList<CardVO>(); // 전체 소지카드 중에서 5개를 랜덤으로 추출해낸 리스트.
@@ -1104,6 +1118,7 @@ public class Game extends Thread // 게임 구현
 				if(select==0)
 				{
 					System.out.println("== 턴을 종료합니다...");
+					System.out.println();
 					p1Action=0;
 				}
 				else if(select!=6)
@@ -1203,7 +1218,7 @@ public class Game extends Thread // 게임 구현
 				System.out.println();
 				sleeps(1000);
 				
-				System.out.println("== "+boss.getName()+"의 차례 ==");
+				System.out.println("== "+boss.getName()+"의 차례 =======================================");
 				System.out.println();
 				// 랜덤하게 행동 결정
 				int rand1 = (int)(Math.random()*10);
@@ -1278,10 +1293,12 @@ public class Game extends Thread // 게임 구현
 				System.out.println("== Game Over == ");
 				return;
 			}
+			turn++;
 		}
 		System.out.println();
 		System.out.println();
-		System.out.println("== 전투 종료 ==");
+		System.out.println("== 전투 종료 =====================================================================================================================================");
+		System.out.println();
 		sleeps(1000);
 		p1.toString();
 		sleeps(1000);
@@ -1461,14 +1478,18 @@ public class Game extends Thread // 게임 구현
 					{
 						int sellItem = Integer.parseInt(scn.nextLine());
 						ItemVO tmp = inventory.get(sellItem-1);
-						p1.setMoney(p1.getMoney()+tmp.getPrice());
-						System.out.println();
-						System.out.println("== 아이템 판매 성공! +"+tmp.getPrice()+"금 획득!  >> 현재 소지금 : "+p1.getMoney());
-						System.out.println();
-						sf.itemDelete(tmp); // 아이템 삭제. CASCADE로 자동으로 인벤, 장비 정보도 삭제.
-						equipment[0] = null; // 장비중인 아이템을 판매한 경우 > 장비아이템 빼기.
-						equipment[1] = null;
-						equipment = sf.equipLoad(p1); // 장비 상태 리로드 > 장비 중인 아이템을 판매했다면 장비칸에서 빠짐.
+						if(tmp.getItemId() == equipment[0].getItemId() || tmp.getItemId() == equipment[1].getItemId())
+						{
+							System.out.println("== 착용 중인 아이템은 팔 수 없습니다!");
+						}
+						else
+						{
+							p1.setMoney(p1.getMoney()+tmp.getPrice());
+							System.out.println();
+							System.out.println("== 아이템 판매 성공! +"+tmp.getPrice()+"금 획득!  >> 현재 소지금 : "+p1.getMoney());
+							System.out.println();
+							sf.itemDelete(tmp); // 아이템 삭제. CASCADE로 자동으로 인벤, 장비 정보도 삭제.
+						}
 					} 
 					catch (Exception e) 
 					{

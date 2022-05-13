@@ -208,6 +208,7 @@ public class Mains extends Thread
 		System.out.println();
 		System.out.println("10층은 각 스테이지의 보스가 있으며, 여타 몬스터보다 강력한 위력을 갖고, 보상 또한 더욱 좋습니다.");
 		System.out.println("10층의 보스를 클리어를 해야 스테이지가 클리어되며, 다음 스테이지로 넘어갈 수 있습니다.");
+		System.out.println("랭킹은 몬스터를 사냥해 얻은 포인트를 자동으로 계산해서 나타내주고, 동점일 시, 돌파한 방 갯수, 소지금순으로 순서가 매겨집니다.");
 		System.out.println("5/13 0.13버전은 현재 스테이지4까지 구현되어 있습니다.");
 		System.out.println();
 		System.out.println();
@@ -224,7 +225,7 @@ public class Mains extends Thread
 		System.out.println("올라가 싸울 준비가 되었다면 1번을 눌러 게임을 진행합니다.");
 		System.out.println();
 		System.out.println();
-		System.out.println("== 게임 중 전투 플레이");
+		System.out.println("== 3. 게임 중 전투 플레이");
 		System.out.println("기본적으로 던전탐험은 턴제게임으로, 당신의 턴이 시작하고 몬스터의 턴이 그 뒤에 시작됩니다.");
 		System.out.println("방에 들어서면, 몬스터가 나타나고 당신의 턴이 시작됩니다.");
 		System.out.println("당신이 갖고 있는 전체 카드 중 5개의 카드가 돌아오는 당신의 턴마다 선택되고 그 턴에는 그 카드들만 사용가능합니다.");
@@ -233,11 +234,18 @@ public class Mains extends Thread
 		System.out.println("6번을 눌러 투척/회복 아이템을 사용가능합니다.");
 		System.out.println();
 		System.out.println("당신의 턴내에 최대한 카드를 활용하여 몬스터의 hp를 0으로 만들어 죽여야 합니다.");
+		System.out.println("공격카드를 사용해서 적의 hp를 최대한 0이 되도록 하고, 방어카드를 사용해서 혹시 모를 적의 공격에 대비합니다.");
+		System.out.println("기본적으로 공격력만큼 hp가 깎이고, 방어력이 있을 시, 방어력만큼 공격력을 막아내고 나머지 못막아낸 공격력만큼은 hp가 깎입니다.");
 		System.out.println();
 		System.out.println("당신이 당신의 턴 내에 몬스터를 죽이지 못한다면, 몬스터의 턴이 와서 몬스터가 행동을 할 수 있습니다");
 		System.out.println("몬스터는 확률적으로 당신을 공격하거나, 방어 태세를 취할 것 입니다.");
 		System.out.println("만약 몬스터의 공격을 받고 hp가 0이 된다면 게임은 종료되고, 당신이 해왔던 게임진행상태는 초기화됩니다.");
 		System.out.println("당신이 이긴다면, 당신은 보상으로 고정적으로 돈을 얻고 확률적으로 아이템과 카드를 얻습니다.");
-		
+		System.out.println();
+		System.out.println("== 4. 기타 팁");
+		System.out.println("일반 몬스터는 5,10층을 제외한 모든층에 랜덤으로 나타나고, 공격과 방어 두가지 선택지만 사용합니다.");
+		System.out.println("보스 몬스터는 오직 10층에만 나타나며, 공격1, 공격2, 필살기, 방어까지 4가지 선택지를 사용합니다.");
+		System.out.println("보스 몬스터는 확률적으로 더 좋은 아이템을 보상으로 줍니다.");
+		sleeps(30000);
 	}
 }

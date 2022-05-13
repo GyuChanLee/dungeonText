@@ -117,12 +117,40 @@ public class UnitList
 	private Units pyromania2 = new Units("방화광",2,1300,150,0,120,pyromaniaAppear,pyromaniaAttack,pyromaniaAttack2, pyromaniaDefense);
 	
 	// stage 4
-	private String medusaAppear = "방화에 미친 방화광을 조우하였습니다! ";
-	private String medusaAttack = "== 방화광은 뜨거운 화염 폭탄을 당신에게 던집니다...";
-	private String medusaAttack2 = "화염폭발";
-	private String medusaDefense = "== 방화광은 스스로 몸을 지지며 의지를 다집니다...";
+	private String medusaAppear = "눈을 마주치면 돌이 된다는 전설속의 괴물을 조우하였습니다! ";
+	private String medusaAttack = "== 메두사는 강렬한 안광을 당신에게 내뿜습니다...";
+	private String medusaAttack2 = "눈빛공격";
+	private String medusaDefense = "== 메두사는 자신의 비늘을 곤두세워 방어합니다...";
 	private Units medusa1 = new Units("메두사",1,1000,50,30,130,medusaAppear,medusaAttack,medusaAttack2, medusaDefense);
 	private Units medusa2 = new Units("메두사",2,1500,60,50,190,medusaAppear,medusaAttack,medusaAttack2, medusaDefense);
+	
+	private String lizardManAppear = "강인한 리자드맨 용사를 조우하였습니다! ";
+	private String lizardManAttack = "== 리자드맨은 절도있는 자세로 창을 당신에게 던집니다...";
+	private String lizardManAttack2 = "투창공격";
+	private String lizardManDefense = "== 리자드맨은 부족의 상징이 박힌 방패를 들어 방어태세를 취합니다...";
+	private Units lizardMan1 = new Units("리자드맨",1,1500,70,40,100,lizardManAppear,lizardManAttack,lizardManAttack2, lizardManDefense);
+	private Units lizardMan2 = new Units("리자드맨",2,2000,75,60,100,lizardManAppear,lizardManAttack,lizardManAttack2, lizardManDefense);
+	
+	private String monsterBatAppear = "거대한 괴물 박쥐를 조우하였습니다! ";
+	private String monsterBatAttack = "== 괴물 박쥐는 재빠르게 당신에게 다가가 할퀴기 시작합니다...";
+	private String monsterBatAttack2 = "할퀴기";
+	private String monsterBatDefense = "== 괴물 박쥐는 날개를 펼쳐 당신의 공격을 막을 준비를 합니다...";
+	private Units monsterBat1 = new Units("괴물 박쥐",1,1800,40,50,50,monsterBatAppear,monsterBatAttack,monsterBatAttack2, monsterBatDefense);
+	private Units monsterBat2 = new Units("괴물 박쥐",2,2300,55,60,60,monsterBatAppear,monsterBatAttack,monsterBatAttack2, monsterBatDefense);
+	
+	private String impAppear = "작고 비열한 임프를 조우하였습니다! ";
+	private String impAttack = "== 임프는 재빠르게 당신에게 다가가 단검을 찌릅니다...";
+	private String impAttack2 = "찌르기";
+	private String impDefense = "== 임프는 가죽을 덧댄 망토를 펼쳐 당신의 공격을 막을 준비를 합니다...";
+	private Units imp1 = new Units("임프",1,2000,70,10,150,impAppear,impAttack,impAttack2, impDefense);
+	private Units imp2 = new Units("임프",2,3000,90,10,200,impAppear,impAttack,impAttack2, impDefense);
+	
+	private String cursedBladeAppear = "저주받은 검을 조우하였습니다! ";
+	private String cursedBladeAttack = "== 저주받은 검은 당신을 베기 위해 날아듭니다...";
+	private String cursedBladeAttack2 = "베기";
+	private String cursedBladeDefense = "== 저주받은 검은 몸체를 세워 막을 준비를 합니다...";
+	private Units cursedBlade1 = new Units("저주받은 검",1,1800,60,60,60,cursedBladeAppear,cursedBladeAttack,cursedBladeAttack2, cursedBladeDefense);
+	private Units cursedBlade2 = new Units("저주받은 검",2,2500,75,75,75,cursedBladeAppear,cursedBladeAttack,cursedBladeAttack2, cursedBladeDefense);
 	
 	public void loadUnitList()
 	{
@@ -162,6 +190,14 @@ public class UnitList
 		// stage4
 		unitList.add(medusa1);
 		unitList.add(medusa2);
+		unitList.add(lizardMan1);
+		unitList.add(lizardMan2);
+		unitList.add(monsterBat1);
+		unitList.add(monsterBat2);
+		unitList.add(imp1);
+		unitList.add(imp2);
+		unitList.add(cursedBlade1);
+		unitList.add(cursedBlade2);
 	}
 	
 	public Units getUnit(String name, int mobId) // 유닛이름과 아이디로 검색해서 유닛 인스턴스 반환
