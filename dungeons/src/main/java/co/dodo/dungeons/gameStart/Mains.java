@@ -53,7 +53,7 @@ public class Mains extends Thread
 					System.out.println();
 					for(PlayerVO vo : Scores)
 					{
-						sleeps(500);
+						sleeps(250);
 						System.out.print("== "+i+"등 : ");
 						vo.rank();
 						System.out.println();
@@ -247,6 +247,6 @@ public class Mains extends Thread
 		System.out.println("보스 몬스터는 오직 10층에만 나타나며, 공격1, 공격2, 필살기, 방어까지 4가지 선택지를 사용합니다.");
 		System.out.println("보스 몬스터는 확률적으로 더 좋은 아이템을 보상으로 줍니다.");
 		System.out.println();
-		sleeps(15000);
+		sleeps(5000);
 	}
 }
