@@ -1203,6 +1203,7 @@ public class Game extends Thread // 게임 구현
 						allAtt += (p1Att+p1.getAttack());
 						attackCount++;
 					}
+					selectCard5.remove(selectCard);
 				}
 				
 				if(selectCard!=null)

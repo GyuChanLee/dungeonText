@@ -246,6 +246,6 @@ public class Mains extends Thread
 		System.out.println("일반 몬스터는 5,10층을 제외한 모든층에 랜덤으로 나타나고, 공격과 방어 두가지 선택지만 사용합니다.");
 		System.out.println("보스 몬스터는 오직 10층에만 나타나며, 공격1, 공격2, 필살기, 방어까지 4가지 선택지를 사용합니다.");
 		System.out.println("보스 몬스터는 확률적으로 더 좋은 아이템을 보상으로 줍니다.");
-		sleeps(30000);
+		sleeps(15000);
 	}
 }
