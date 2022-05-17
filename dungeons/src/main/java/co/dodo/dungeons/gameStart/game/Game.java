@@ -142,119 +142,126 @@ public class Game extends Thread // 게임 구현
 			System.out.println("== 1. 들어가기.");
 			System.out.println("== 2. 나가기.");
 			System.out.println("== 3. 게임저장.");
-			int select = Integer.parseInt(scn.nextLine());
-			
-			if(select == 3)
+			try 
 			{
-				saveGame();
-				sleeps(500);
-				System.out.println("== 게임 저장 완료! ");
-			}
-			else if(select == 2)
-			{
-				System.out.println("== 집으로 돌아갑니다...");
-				t =false;
-			}
-			else if(select == 1)
-			{
-				while(true)
+				int select = Integer.parseInt(scn.nextLine());
+				
+				if(select == 3)
 				{
-					if((p1.getProgress()%10)==4) // 진행상황 5층 > 특별 이벤트 방.
+					saveGame();
+					sleeps(500);
+					System.out.println("== 게임 저장 완료! ");
+				}
+				else if(select == 2)
+				{
+					System.out.println("== 집으로 돌아갑니다...");
+					t =false;
+				}
+				else if(select == 1)
+				{
+					while(true)
 					{
-						int pause = stairs();
-						if(pause == 1)
+						if((p1.getProgress()%10)==4) // 진행상황 5층 > 특별 이벤트 방.
 						{
+							int pause = stairs();
+							if(pause == 1)
+							{
+								return;
+							}
+							climbUpEvent();
+						}
+						else if((p1.getProgress()%10)==9) // 10층 > 보스방
+						{
+							int pause = stairs();
+							if(pause == 1)
+							{
+								return;
+							}
+							climbUpBoss();
+						}
+						else
+						{
+							int pause = stairs();
+							if(pause == 1)
+							{
+								return;
+							}
+							climbUp();
+						}
+						
+						if(p1.getHp() <= 0) // hp가 0. 사망해서 게임 끝나서 나왔을 때, 초기화하기.
+						{
+							p1.setProgress(0);
+							p1.setKills(0);
+							p1.setHp(100);
+							p1.setKills(0);
+							p1.setAttack(15);
+							p1.setDefense(5);
+							p1.setMoney(0);
+							saveGame(); // 죽으면 캐릭터 객체 초기화
+							// 인벤토리 초기화
+							for(int i = 0; i < inventory.size(); i++)
+							{
+								sf.itemDelete(inventory.get(i)); // db에 있는 인벤토리 아이템 삭제.
+							}
+							inventory = sf.showInven(p1); // db에 비어있는 인벤 반환
+							// 카드리스트 초기화
+							for(int i = 0; i < allCards.size(); i++)
+							{
+								sf.cardDelete(allCards.get(i)); // db에 있는 카드리스트 카드 삭제.
+							}
+							allCards = sf.CardListSelect(p1); // db에 비어있는 카드리스트 반환
 							return;
 						}
-						climbUpEvent();
-					}
-					else if((p1.getProgress()%10)==9) // 10층 > 보스방
-					{
-						int pause = stairs();
-						if(pause == 1)
+						if((p1.getProgress()%10)==0)
 						{
-							return;
+							break;
 						}
-						climbUpBoss();
-					}
-					else
-					{
-						int pause = stairs();
-						if(pause == 1)
-						{
-							return;
-						}
-						climbUp();
 					}
 					
-					if(p1.getHp() <= 0) // hp가 0. 사망해서 게임 끝나서 나왔을 때, 초기화하기.
+					if(p1.getProgress()==10) // 스테이지 클리어 시, 완료메시지
 					{
-						p1.setProgress(0);
-						p1.setKills(0);
-						p1.setHp(100);
-						p1.setKills(0);
-						p1.setAttack(15);
-						p1.setDefense(5);
-						p1.setMoney(0);
-						saveGame(); // 죽으면 캐릭터 객체 초기화
-						// 인벤토리 초기화
-						for(int i = 0; i < inventory.size(); i++)
-						{
-							sf.itemDelete(inventory.get(i)); // db에 있는 인벤토리 아이템 삭제.
-						}
-						inventory = sf.showInven(p1); // db에 비어있는 인벤 반환
-						// 카드리스트 초기화
-						for(int i = 0; i < allCards.size(); i++)
-						{
-							sf.cardDelete(allCards.get(i)); // db에 있는 카드리스트 카드 삭제.
-						}
-						allCards = sf.CardListSelect(p1); // db에 비어있는 카드리스트 반환
-						return;
+						sleeps(500);
+						map.cong();
+						sleeps(500);
+						System.out.println();
+						p1.toString();
+						System.out.println();
+						System.out.println();
+						System.out.println();
+						sleeps(1000);
 					}
-					if((p1.getProgress()%10)==0)
+					else if(p1.getProgress()==20)
 					{
-						break;
+						sleeps(500);
+						map.cong();
+						sleeps(500);
+						System.out.println();
+						p1.toString();
+						System.out.println();
+						System.out.println();
+						System.out.println();
+						sleeps(1000);
+					}
+					else if(p1.getProgress()==30)
+					{
+						sleeps(500);
+						map.cong();
+						sleeps(500);
+						System.out.println();
+						p1.toString();
+						System.out.println();
+						System.out.println();
+						System.out.println();
+						sleeps(1000);
 					}
 				}
-				
-				if(p1.getProgress()==10) // 스테이지 클리어 시, 완료메시지
+				else
 				{
-					sleeps(500);
-					map.cong();
-					sleeps(500);
-					System.out.println();
-					p1.toString();
-					System.out.println();
-					System.out.println();
-					System.out.println();
-					sleeps(1000);
-				}
-				else if(p1.getProgress()==20)
-				{
-					sleeps(500);
-					map.cong();
-					sleeps(500);
-					System.out.println();
-					p1.toString();
-					System.out.println();
-					System.out.println();
-					System.out.println();
-					sleeps(1000);
-				}
-				else if(p1.getProgress()==30)
-				{
-					sleeps(500);
-					map.cong();
-					sleeps(500);
-					System.out.println();
-					p1.toString();
-					System.out.println();
-					System.out.println();
-					System.out.println();
-					sleeps(1000);
+					System.out.println("== 제대로 고르세요...");
 				}
 			}
-			else
+			catch (Exception e) 
 			{
 				System.out.println("== 제대로 고르세요...");
 			}
@@ -1407,116 +1414,120 @@ public class Game extends Thread // 게임 구현
 				
 				System.out.println("== 5. 판매  |  6. 나가기");
 				System.out.println("== 선택 > ");
-				int buy = Integer.parseInt(scn.nextLine());
-				System.out.println();
-				
-				if(buy==1)
-				{
-					if(sell1.getPrice()>p1.getMoney())
-					{
-						System.out.println("== 상인 : 돈이 부족하군요...");
-						System.out.println();
-					}
-					else
-					{
-						p1.setMoney(p1.getMoney()-sell1.getPrice());
-						sf.itemInsert(sell1); // 얻은 아이템 db에 정보 넣어 고유번호 받기.
-						ItemVO tmp = sf.itemSelect(); // 바로 방금 넣은 아이템을 고유번호 받은 상태로 받아오기.
-						sf.inventoryInsert(tmp,p1); // p1의 인벤토리에 넣기.
-						inventory.clear(); // 기존 인벤토리 비우기.
-						inventory = sf.showInven(p1); // 최신화된 인벤토리 불러오기.
-						check1 = true;
-					}
-				}
-				else if(buy==2)
-				{
-					if(sell2.getPrice()>p1.getMoney())
-					{
-						System.out.println("== 상인 : 돈이 부족하군요...");
-						System.out.println();
-					}
-					else
-					{
-						p1.setMoney(p1.getMoney()-sell2.getPrice());
-						sf.itemInsert(sell2); 
-						ItemVO tmp = sf.itemSelect();
-						sf.inventoryInsert(tmp,p1); 
-						inventory.clear(); 
-						inventory = sf.showInven(p1); 
-						check2 = true;
-					}
-				}
-				else if(buy==3)
-				{
-					if(sell3.getPrice()>p1.getMoney())
-					{
-						System.out.println("== 상인 : 돈이 부족하군요...");
-						System.out.println();
-					}
-					else
-					{
-						p1.setMoney(p1.getMoney()-sell3.getPrice());
-						sf.itemInsert(sell3); 
-						ItemVO tmp = sf.itemSelect(); 
-						sf.inventoryInsert(tmp,p1); 
-						inventory.clear(); 
-						inventory = sf.showInven(p1); 
-						check3 = true;
-					}
-				}
-				else if(buy==4)
-				{
-					if(sell4.getPrice()>p1.getMoney())
-					{
-						System.out.println("== 상인 : 돈이 부족하군요...");
-						System.out.println();
-					}
-					else
-					{
-						p1.setMoney(p1.getMoney()-sell4.getPrice());
-						sf.itemInsert(sell4); 
-						ItemVO tmp = sf.itemSelect(); 
-						sf.inventoryInsert(tmp,p1); 
-						inventory.clear(); 
-						inventory = sf.showInven(p1); 
-						check4 = true;
-					}
-				}
-				else if(buy==5)
-				{
-					// 내 아이템 판매 기능.
-					System.out.println("== 상인 : 판매할 아이템을 꺼내 보십시오...");
+				try {
+					int buy = Integer.parseInt(scn.nextLine());
 					System.out.println();
-					showInven();
-					System.out.println("== 판매할 아이템을 선택 > ");
-					try 
+					
+					if(buy==1)
 					{
-						int sellItem = Integer.parseInt(scn.nextLine());
-						ItemVO tmp = inventory.get(sellItem-1);
-						if(tmp.getItemId() == equipment[0].getItemId() || tmp.getItemId() == equipment[1].getItemId())
+						if(sell1.getPrice()>p1.getMoney())
 						{
-							System.out.println("== 착용 중인 아이템은 팔 수 없습니다!");
+							System.out.println("== 상인 : 돈이 부족하군요...");
+							System.out.println();
 						}
 						else
 						{
-							p1.setMoney(p1.getMoney()+tmp.getPrice());
-							System.out.println();
-							System.out.println("== 아이템 판매 성공! +"+tmp.getPrice()+"금 획득!  >> 현재 소지금 : "+p1.getMoney());
-							System.out.println();
-							sf.itemDelete(tmp); // 아이템 삭제. CASCADE로 자동으로 인벤, 장비 정보도 삭제.
+							p1.setMoney(p1.getMoney()-sell1.getPrice());
+							sf.itemInsert(sell1); // 얻은 아이템 db에 정보 넣어 고유번호 받기.
+							ItemVO tmp = sf.itemSelect(); // 바로 방금 넣은 아이템을 고유번호 받은 상태로 받아오기.
+							sf.inventoryInsert(tmp,p1); // p1의 인벤토리에 넣기.
+							inventory.clear(); // 기존 인벤토리 비우기.
+							inventory = sf.showInven(p1); // 최신화된 인벤토리 불러오기.
+							check1 = true;
 						}
-					} 
-					catch (Exception e) 
-					{
-						System.out.println("== 제대로 고르세요...");
 					}
-				}
-				else
-				{
-					System.out.println("== 상인 : 벌써 가시게요..? 다음에 봅시다...");
-					System.out.println("== ");
-					p1.setProgress(p1.getProgress()+1);
-					return;
+					else if(buy==2)
+					{
+						if(sell2.getPrice()>p1.getMoney())
+						{
+							System.out.println("== 상인 : 돈이 부족하군요...");
+							System.out.println();
+						}
+						else
+						{
+							p1.setMoney(p1.getMoney()-sell2.getPrice());
+							sf.itemInsert(sell2); 
+							ItemVO tmp = sf.itemSelect();
+							sf.inventoryInsert(tmp,p1); 
+							inventory.clear(); 
+							inventory = sf.showInven(p1); 
+							check2 = true;
+						}
+					}
+					else if(buy==3)
+					{
+						if(sell3.getPrice()>p1.getMoney())
+						{
+							System.out.println("== 상인 : 돈이 부족하군요...");
+							System.out.println();
+						}
+						else
+						{
+							p1.setMoney(p1.getMoney()-sell3.getPrice());
+							sf.itemInsert(sell3); 
+							ItemVO tmp = sf.itemSelect(); 
+							sf.inventoryInsert(tmp,p1); 
+							inventory.clear(); 
+							inventory = sf.showInven(p1); 
+							check3 = true;
+						}
+					}
+					else if(buy==4)
+					{
+						if(sell4.getPrice()>p1.getMoney())
+						{
+							System.out.println("== 상인 : 돈이 부족하군요...");
+							System.out.println();
+						}
+						else
+						{
+							p1.setMoney(p1.getMoney()-sell4.getPrice());
+							sf.itemInsert(sell4); 
+							ItemVO tmp = sf.itemSelect(); 
+							sf.inventoryInsert(tmp,p1); 
+							inventory.clear(); 
+							inventory = sf.showInven(p1); 
+							check4 = true;
+						}
+					}
+					else if(buy==5)
+					{
+						// 내 아이템 판매 기능.
+						System.out.println("== 상인 : 판매할 아이템을 꺼내 보십시오...");
+						System.out.println();
+						showInven();
+						System.out.println("== 판매할 아이템을 선택 > ");
+						try 
+						{
+							int sellItem = Integer.parseInt(scn.nextLine());
+							ItemVO tmp = inventory.get(sellItem-1);
+							if(tmp.getItemId() == equipment[0].getItemId() || tmp.getItemId() == equipment[1].getItemId())
+							{
+								System.out.println("== 착용 중인 아이템은 팔 수 없습니다!");
+							}
+							else
+							{
+								p1.setMoney(p1.getMoney()+tmp.getPrice());
+								System.out.println();
+								System.out.println("== 아이템 판매 성공! +"+tmp.getPrice()+"금 획득!  >> 현재 소지금 : "+p1.getMoney());
+								System.out.println();
+								sf.itemDelete(tmp); // 아이템 삭제. CASCADE로 자동으로 인벤, 장비 정보도 삭제.
+							}
+						} 
+						catch (Exception e) 
+						{
+							System.out.println("== 제대로 고르세요...");
+						}
+					}
+					else
+					{
+						System.out.println("== 상인 : 벌써 가시게요..? 다음에 봅시다...");
+						System.out.println("== ");
+						p1.setProgress(p1.getProgress()+1);
+						return;
+					}
+				} catch (Exception e) {
+					System.out.println("== 제대로 고르세요...");
 				}
 			}
 		}
@@ -1700,76 +1711,80 @@ public class Game extends Thread // 게임 구현
 	
 	private void editEquipment()
 	{
-		System.out.println("== 착용 장비를 관리하려면 0 입력 > ");
-		System.out.println("== 거부 : 아무 숫자 > ");
-		int equip = Integer.parseInt(scn.nextLine());
-		if(equip==0)
-		{
-			showEquipment();
-			System.out.println();
-			System.out.println("== 변경할 착용장비를 입력 ( 1: 무기, 2 : 방어구, 3 : 취소 ) > ");
-			System.out.println();
-			int changeOld = Integer.parseInt(scn.nextLine());
-			if(changeOld==1)
+		try {
+			System.out.println("== 착용 장비를 관리하려면 0 입력 > ");
+			System.out.println("== 거부 : 아무 숫자 > ");
+			int equip = Integer.parseInt(scn.nextLine());
+			if(equip==0)
 			{
-				showInven();
-				System.out.println("== 대신 착용할 무기를 입력 ( 취소 : 0번 ) > ");
-				int changeNew = Integer.parseInt(scn.nextLine());
-				
-				if(changeNew==0)
+				showEquipment();
+				System.out.println();
+				System.out.println("== 변경할 착용장비를 입력 ( 1: 무기, 2 : 방어구, 3 : 취소 ) > ");
+				System.out.println();
+				int changeOld = Integer.parseInt(scn.nextLine());
+				if(changeOld==1)
 				{
-					return;
-				}
-				
-				ItemVO chageItem = inventory.get(changeNew-1);
-				if(chageItem.getAttack()==0)
-				{
-					System.out.println("== 무기류를 선택하십시오...");
-				}
-				else
-				{
-					if(equipment[0]!=null) // 이미 착용중인 것이 있을 때, 착용해제.
+					showInven();
+					System.out.println("== 대신 착용할 무기를 입력 ( 취소 : 0번 ) > ");
+					int changeNew = Integer.parseInt(scn.nextLine());
+					
+					if(changeNew==0)
 					{
-						p1.setAttack(p1.getAttack()-equipment[0].getAttack());
-						sf.equipDelete(equipment[0]); // equip 테이블에 있던 착용장비 삭제.
+						return;
 					}
-					equipment[0] = chageItem; // 무기칸 변경
-					p1.setAttack(p1.getAttack()+equipment[0].getAttack());
-					sf.equipInsert(chageItem, p1); // equip테이블에 착용장비 넣기.
+					
+					ItemVO chageItem = inventory.get(changeNew-1);
+					if(chageItem.getAttack()==0)
+					{
+						System.out.println("== 무기류를 선택하십시오...");
+					}
+					else
+					{
+						if(equipment[0]!=null) // 이미 착용중인 것이 있을 때, 착용해제.
+						{
+							p1.setAttack(p1.getAttack()-equipment[0].getAttack());
+							sf.equipDelete(equipment[0]); // equip 테이블에 있던 착용장비 삭제.
+						}
+						equipment[0] = chageItem; // 무기칸 변경
+						p1.setAttack(p1.getAttack()+equipment[0].getAttack());
+						sf.equipInsert(chageItem, p1); // equip테이블에 착용장비 넣기.
+					}
+				}
+				else if(changeOld==2)
+				{
+					showInven();
+					System.out.println("== 대신 착용할 방어구를 입력 ( 취소 : 0번 ) > ");
+					int changeNew = Integer.parseInt(scn.nextLine());
+					
+					if(changeNew==0)
+					{
+						return;
+					}
+					
+					ItemVO chageItem = inventory.get(changeNew-1);
+					if(chageItem.getDefense()==0)
+					{
+						System.out.println("== 방어구류를 선택하십시오...");
+					}
+					else
+					{
+						if(equipment[1]!=null)
+						{
+							p1.setDefense(p1.getDefense()-equipment[1].getDefense());
+							sf.equipDelete(equipment[1]); // equip 테이블에 있던 착용장비 삭제.
+						}
+						equipment[1] = chageItem; // 방어구칸 변경
+						p1.setDefense(p1.getDefense()+equipment[1].getDefense());
+						sf.equipInsert(chageItem, p1); // equip테이블에 착용장비 넣기.
+					}
 				}
 			}
-			else if(changeOld==2)
+			else
 			{
-				showInven();
-				System.out.println("== 대신 착용할 방어구를 입력 ( 취소 : 0번 ) > ");
-				int changeNew = Integer.parseInt(scn.nextLine());
-				
-				if(changeNew==0)
-				{
-					return;
-				}
-				
-				ItemVO chageItem = inventory.get(changeNew-1);
-				if(chageItem.getDefense()==0)
-				{
-					System.out.println("== 방어구류를 선택하십시오...");
-				}
-				else
-				{
-					if(equipment[1]!=null)
-					{
-						p1.setDefense(p1.getDefense()-equipment[1].getDefense());
-						sf.equipDelete(equipment[1]); // equip 테이블에 있던 착용장비 삭제.
-					}
-					equipment[1] = chageItem; // 방어구칸 변경
-					p1.setDefense(p1.getDefense()+equipment[1].getDefense());
-					sf.equipInsert(chageItem, p1); // equip테이블에 착용장비 넣기.
-				}
+				System.out.println();
 			}
-		}
-		else
-		{
-			System.out.println();
+		} catch (Exception e) {
+			System.out.println("== 제대로 고르세요...");
 		}
 	}
 	
